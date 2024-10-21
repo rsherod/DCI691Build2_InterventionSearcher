@@ -1,4 +1,4 @@
-# DCI 691 Build 2 - Streamlit Bot (R. Beghetto, fall 2024)
+# DCI 691 Build 2 (R. Sherod, fall 2024)
 # Importing necessary libraries
 # This section brings in external code libraries that add functionality to our program.
 # Streamlit (st) is used to create web applications, google.generativeai helps with AI text generation,
@@ -12,17 +12,17 @@ from PIL import Image
 # This sets up the basic properties of the web application.
 # It sets the title that appears in the browser tab and makes the layout use the full width of the screen.
 # You can customize the page title (e.g., Creative Assistant" and layout by modifying these parameters.
-st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
+st.set_page_config(page_title="Tier 2 and Tier 3 Intervention Grid Search", layout="wide")
 
 # Display image
 # This code attempts to open and display an image file named 'Build2.png'.
 # If successful, it shows the image with a caption. If there's an error, it displays an error message instead.
 # You can customize this by changing the image file name and path. Supported image types include .png, .jpg, .jpeg, and .gif.
 # To use a different image, replace 'Build2.png' with your desired image file name (e.g., 'my_custom_image.jpg').
-image_path = 'Build2.png'
+image_path = 'Tier 2 and Tier 3 Intervention Grid Search.png'
 try:
     image = Image.open(image_path)
-    st.image(image, caption='Created by YOUR NAME (2024)', use_column_width=True)
+    st.image(image, caption='Created by Rebecca Sherod (2024)', use_column_width=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
@@ -30,9 +30,9 @@ except Exception as e:
 # This adds a main title to the web page and a description of the chatbot.
 # It also includes a note to remind users that the bot can make mistakes.
 # You can customize the title, description, and caption by modifying the text within the quotes.
-st.title("Welcome Build 2 Bot!")
-st.write("[Provide a description of your own bot for the user]")
-st.caption("Note: This Bot can make mistakes. Check all important information.")
+st.title("Welcome to the Intervention Grid Searcher!")
+st.write("This bot will help you narrow down possible Tier 2 and Tier 3 Intervetnions from the Intervention Grids at your school")
+st.caption("Note: This Bot can make mistakes. Refer the the intervention grid entry criteria to ensure the student is eligible.")
 
 # Initialize Gemini client
 # This sets up the connection to the Gemini AI service using an API key.
@@ -133,7 +133,7 @@ for message in st.session_state.messages:
 # User input
 # This creates a text input field where users can type their messages to the chatbot.
 # The placeholder text "Your message:" can be customized to any desired prompt, e.g., "Message Creative Assistant...".
-user_input = st.chat_input("Your message:")
+user_input = st.chat_input("When you are ready to get started, let me know by typing here:")
 
 if user_input:
     # Add user message to chat history
