@@ -60,17 +60,14 @@ with st.sidebar:
 # Process uploaded PDF
 if uploaded_pdf:
     try:
-        pdf_reader = PdfReader(uploaded_pdf)
-        pdf_text = ""
-        for page in pdf_reader.pages:
-            pdf_text += page.extract_text() + "\n"
-        st.session_state.pdf_content = pdf_text
-        st.session_state.debug.append(f"PDF processed: {len(pdf_text)} characters")
-        # Reset chat session when new PDF is uploaded
-        st.session_state.chat_session = None
+        # Upload file using File API with mime_type specified
+        uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
+        st.session_state.uploaded_file = uploaded_file
+        st.success("File uploaded successfully!")
+                  
     except Exception as e:
-        st.error(f"Error processing PDF: {e}")
-        st.session_state.debug.append(f"PDF processing error: {e}")
+        st.error(f"Error uploading file: {e}")
+        st.session_state.debug.append(f"File upload error: {e}")
 
 # Clear chat function
 if clear_button:
