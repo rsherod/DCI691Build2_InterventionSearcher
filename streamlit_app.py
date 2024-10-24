@@ -1,7 +1,6 @@
 # DCI 691 Build 2 - Streamlit Bot (R. Beghetto, fall 2024)
 import streamlit as st
 import google.generativeai as genai
-from PyPDF2 import PdfReader
 from PIL import Image
 
 # Streamlit configuration
