@@ -138,7 +138,15 @@ if user_input:
 
         # Generate response with error handling
         try:
-            response = st.session_state.chat_session.send_message(current_message["content"])
+            if st.session_state.uploaded_file:
+                # If there's an uploaded file, include it in the generation
+                response = st.session_state.chat_session.send_message([
+                    st.session_state.uploaded_file,
+                    current_message["content"]
+                ])
+            else:
+                # Otherwise, just use the text prompt
+                response = st.session_state.chat_session.send_message(current_message["content"])
 
             full_response = response.text
             message_placeholder.markdown(full_response)
