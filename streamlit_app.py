@@ -1,4 +1,4 @@
-# DCI 691 Build 2 - Streamlit Bot (R. Beghetto, fall 2024)
+# DCI 691 Build 2 - Intervention Grid Searcher (R. Sherod, fall 2024)
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
@@ -19,18 +19,18 @@ if "should_generate_response" not in st.session_state:
 # If successful, it shows the image with a caption. If there's an error, it displays an error message instead.
 # You can customize this by changing the image file name and path. Supported image types include .png, .jpg, .jpeg, and .gif.
 # To use a different image, replace 'Build2.png' with your desired image file name (e.g., 'my_custom_image.jpg').
-image_path = 'Build2.png'
+image_path = 'Tier 2 and Tier 3 Intervention Grid Search.png'
 try:
     image = Image.open(image_path)
-    st.image(image, caption='Created by YOUR NAME (2024)', use_column_width=True)
+    st.image(image, caption='Created by Rebecca Sherod (2024)', use_column_width=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
 # Title and BotDescription 
 # You can customize the title, description, and caption by modifying the text within the quotes.
-st.title("Welcome Build 2 Bot!")
-st.write("[Provide a description of your own bot for the user]")
-st.caption("Note: This Bot can make mistakes. Check all important information.")
+st.title("Welcome to the Intervention Grid Searcher!")
+st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school.")
+st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or studnets.")
 
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
@@ -177,7 +177,7 @@ if st.session_state.should_generate_response:
 
 # User input
 # The placeholder text "Your message:" can be customized to any desired prompt, e.g., "Message Creative Assistant...".
-user_input = st.chat_input("Your message:")
+user_input = st.chat_input("Type here:")
 
 if user_input:
     # Add user message to chat history
