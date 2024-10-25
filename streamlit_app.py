@@ -6,6 +6,14 @@ from PIL import Image
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
 
+# Add this code between st.set_page_config(page_title="Streamlit Chatbot", layout="wide") and Display image code block
+if "form_submitted" not in st.session_state:
+    st.session_state.form_submitted = False
+if "form_responses" not in st.session_state:
+    st.session_state.form_responses = {}
+if "should_generate_response" not in st.session_state:
+    st.session_state.should_generate_response = False
+
 # Display image
 # This code attempts to open and display an image file named 'Build2.png'.
 # If successful, it shows the image with a caption. If there's an error, it displays an error message instead.
