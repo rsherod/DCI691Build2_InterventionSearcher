@@ -62,6 +62,22 @@ with st.sidebar:
         st.session_state.chat_session = None
     temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
     st.session_state.temperature = temperature
+
+# Modify the info e.g., ['Bot_Name'] and "Bot Name:" for your purposes. You can also add/delete questions to fit your goals.
+    st.title("Enter Background Information Here")
+    with st.form("user_form"):
+        st.session_state.form_responses['Academic_read'] = st.text_input("Student Reading Performance - below average, average, above average:", key="Academic_read")
+        st.session_state.form_responses['Academic_math'] = st.text_input("Student Math Performance - below average, average, above average:", key="Academic_math")
+        st.session_state.form_responses['SRSS_I'] = st.text_input("SRSS-Internalizing Score:", key="SRSS_I")
+        st.session_state.form_responses['SRSS-E'] = st.text_input("SRSS-Externalizing Score:", key="SRSS-E")
+        st.session_state.form_responses['Days_missed'] = st.text_input("Number of Days Student has Missed:", key="Days_missed")
+        st.session_state.form_responses['ODRs'] = st.text_input("Number of Office Discipline Referrals Earned:", key="ODRs")
+        
+        submit_button = st.form_submit_button("Submit Responses")
+        if submit_button:
+            st.session_state.form_submitted = True
+            st.session_state.should_generate_response = True
+    
     uploaded_pdf = st.file_uploader("Upload PDF", type=["pdf"])
     clear_button = st.button("Clear Chat")
 
