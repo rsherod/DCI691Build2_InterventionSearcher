@@ -51,15 +51,15 @@ if "chat_session" not in st.session_state:
 
 # Sidebar for model and temperature selection
 #with st.sidebar:
-    st.title("Settings")
-    st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
-    model_option = st.selectbox(
-        "Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
-    )
+    #st.title("Settings")
+    #st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
+    #model_option = st.selectbox(
+        #"Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
+    
     #if model_option != st.session_state.model_name:
-        st.session_state.model_name = model_option
-        st.session_state.messages = []
-        st.session_state.chat_session = None
+        #st.session_state.model_name = model_option
+        #st.session_state.messages = []
+        #st.session_state.chat_session = None
     #temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
    # st.session_state.temperature = temperature
 
