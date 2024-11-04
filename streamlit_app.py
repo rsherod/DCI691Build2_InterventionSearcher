@@ -29,7 +29,7 @@ except Exception as e:
 # Title and BotDescription 
 # You can customize the title, description, and caption by modifying the text within the quotes.
 st.title("Welcome to the Intervention Grid Searcher!")
-st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school.")
+st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school. <br> Directions: Use the panel on the left to upload the Tier 2 and Tier 3 Intervention Grid from your school. Then, answer the questions about the student or group of students you are interested in selecting an intervention for.")
 st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or studnets.")
 
 # Initialize Gemini client
