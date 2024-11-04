@@ -71,57 +71,62 @@ with st.sidebar:
     # temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
     # st.session_state.temperature = temperature
 
-# Modify the bot name and form title as needed.
-BOT_NAME = "Intervention Bot"
-st.title(f"Enter Background Information for {BOT_NAME}")
+    # Create a form to capture student background information
+    st.title(f"Enter Background Information for Intervention Bot")
 
-# Ensure form_responses is initialized before the form
-if 'form_responses' not in st.session_state:
-    st.session_state.form_responses = {}
+    if 'form_responses' not in st.session_state:
+        st.session_state.form_responses = {}
 
-# Create a form to capture student background information
-with st.form("user_form"):
-    # Dropdown for Reading Performance
-    st.session_state.form_responses['Academic_read'] = st.selectbox(
-        "Student Reading Performance:", 
-        options=["below average", "average", "above average"], 
-        key="Academic_read"
-    )
+    with st.form("user_form"):
+        # Dropdown for Reading Performance
+        st.session_state.form_responses['Academic_read'] = st.selectbox(
+            "Student Reading Performance:", 
+            options=["below average", "average", "above average"], 
+            key="Academic_read"
+        )
 
-    # Dropdown for Math Performance
-    st.session_state.form_responses['Academic_math'] = st.selectbox(
-        "Student Math Performance:", 
-        options=["below average", "average", "above average"], 
-        key="Academic_math"
-    )
+        # Dropdown for Math Performance
+        st.session_state.form_responses['Academic_math'] = st.selectbox(
+            "Student Math Performance:", 
+            options=["below average", "average", "above average"], 
+            key="Academic_math"
+        )
 
-    # Dropdown for SRSS-Internalizing Score
-    st.session_state.form_responses['SRSS_I'] = st.selectbox(
-        "SRSS-Internalizing Score:", 
-        options=["Low", "Moderate", "High"], 
-        key="SRSS_I"
-    )
+        # Dropdown for SRSS-Internalizing Score
+        st.session_state.form_responses['SRSS_I'] = st.selectbox(
+            "SRSS-Internalizing Score:", 
+            options=["Low", "Moderate", "High"], 
+            key="SRSS_I"
+        )
 
-    # Dropdown for SRSS-Externalizing Score
-    st.session_state.form_responses['SRSS_E'] = st.selectbox(
-        "SRSS-Externalizing Score:", 
-        options=["Low", "Moderate", "High"], 
-        key="SRSS_E"
-    )
+        # Dropdown for SRSS-Externalizing Score
+        st.session_state.form_responses['SRSS_E'] = st.selectbox(
+            "SRSS-Externalizing Score:", 
+            options=["Low", "Moderate", "High"], 
+            key="SRSS_E"
+        )
 
-    # Dropdown for Days Missed
-    st.session_state.form_responses['Days_missed'] = st.selectbox(
-        "Number of Days Student has Missed:", 
-        options=["0-5 days", "6-10 days", "11-15 days", "16+ days"], 
-        key="Days_missed"
-    )
+        # Dropdown for Days Missed
+        st.session_state.form_responses['Days_missed'] = st.selectbox(
+            "Number of Days Student has Missed:", 
+            options=["0-5 days", "6-10 days", "11-15 days", "16+ days"], 
+            key="Days_missed"
+        )
 
-    # Dropdown for Office Discipline Referrals
-    st.session_state.form_responses['ODRs'] = st.selectbox(
-        "Number of Office Discipline Referrals Earned:", 
-        options=["0-1 referrals", "2-3 referrals", "4-5 referrals", "6+ referrals"], 
-        key="ODRs"
-    )
+        # Dropdown for Office Discipline Referrals
+        st.session_state.form_responses['ODRs'] = st.selectbox(
+            "Number of Office Discipline Referrals Earned:", 
+            options=["0-1 referrals", "2-3 referrals", "4-5 referrals", "6+ referrals"], 
+            key="ODRs"
+        )
+
+        # Submit button for the form
+        submit_button = st.form_submit_button("Submit Responses")
+        if submit_button:
+            st.session_state.form_submitted = True
+            st.session_state.should_generate_response = True
+            st.success("Thank you! Your responses have been recorded.")
+
     
     # Submit button logic
     submit_button = st.form_submit_button("Submit Responses")
