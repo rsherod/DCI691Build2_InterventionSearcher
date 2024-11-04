@@ -66,10 +66,6 @@ with st.sidebar:
         st.session_state.model_name = model_option
         st.session_state.messages = []
         st.session_state.chat_session = None
-        
-    # Uncomment and finalize this if you plan to use temperature setting
-    # temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
-    # st.session_state.temperature = temperature
 
     # Create a form to capture student background information
     st.title(f"Enter Background Information for Intervention Bot")
@@ -81,42 +77,42 @@ with st.sidebar:
         # Dropdown for Reading Performance
         st.session_state.form_responses['Academic_read'] = st.selectbox(
             "Student Reading Performance:", 
-            options=["below average", "average", "above average"], 
+            options=["Click to select", "below average", "average", "above average"], 
             key="Academic_read"
         )
 
         # Dropdown for Math Performance
         st.session_state.form_responses['Academic_math'] = st.selectbox(
             "Student Math Performance:", 
-            options=["below average", "average", "above average"], 
+            options=["Click to select", "below average", "average", "above average"], 
             key="Academic_math"
         )
 
         # Dropdown for SRSS-Internalizing Score
         st.session_state.form_responses['SRSS_I'] = st.selectbox(
             "SRSS-Internalizing Score:", 
-            options=["Low", "Moderate", "High"], 
+            options=["Click to select", "Low", "Moderate", "High"], 
             key="SRSS_I"
         )
 
         # Dropdown for SRSS-Externalizing Score
         st.session_state.form_responses['SRSS_E'] = st.selectbox(
             "SRSS-Externalizing Score:", 
-            options=["Low", "Moderate", "High"], 
+            options=["Click to select", "Low", "Moderate", "High"], 
             key="SRSS_E"
         )
 
         # Dropdown for Days Missed
         st.session_state.form_responses['Days_missed'] = st.selectbox(
             "Number of Days Student has Missed:", 
-            options=["0-5 days", "6-10 days", "11-15 days", "16+ days"], 
+            options=["Click to select", "0-5 days", "6-10 days", "11-15 days", "16+ days"], 
             key="Days_missed"
         )
 
         # Dropdown for Office Discipline Referrals
         st.session_state.form_responses['ODRs'] = st.selectbox(
             "Number of Office Discipline Referrals Earned:", 
-            options=["0-1 referrals", "2-3 referrals", "4-5 referrals", "6+ referrals"], 
+            options=["Click to select", "0-1 referrals", "2-3 referrals", "4-5 referrals", "6+ referrals"], 
             key="ODRs"
         )
 
@@ -126,25 +122,6 @@ with st.sidebar:
             st.session_state.form_submitted = True
             st.session_state.should_generate_response = True
             st.success("Thank you! Your responses have been recorded.")
-
-    
-    # Submit button logic
-    submit_button = st.form_submit_button("Submit Responses")
-    if submit_button:
-        # All fields will have values by default with drop-downs, so no need for empty check
-        st.session_state.form_submitted = True
-        st.session_state.should_generate_response = True
-        st.success("Thank you! Your responses have been recorded.")
-
-        
-        submit_button = st.form_submit_button("Submit Responses")
-        if submit_button:
-            st.session_state.form_submitted = True
-            st.session_state.should_generate_response = True
-    
-    uploaded_pdf = st.file_uploader("Upload PDF", type=["pdf"])
-    clear_button = st.button("Clear Chat")
-
 # Process uploaded PDF
 if uploaded_pdf:
     try:
