@@ -55,7 +55,7 @@ with st.sidebar:
     st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
     model_option = st.selectbox(
         "Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
-    
+    )
     if model_option != st.session_state.model_name:
         st.session_state.model_name = model_option
         st.session_state.messages = []
