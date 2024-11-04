@@ -68,7 +68,8 @@ with st.sidebar:
         st.session_state.chat_session = None
    
     # File upload for PDF
-    uploaded_pdf = st.file_uploader("Upload Intervention Grid Here:", type=["pdf"])
+    st.title("Upload Intervention Grid Here:")
+    uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
     
     if uploaded_pdf:
         try:
