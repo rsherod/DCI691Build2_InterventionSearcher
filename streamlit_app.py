@@ -50,28 +50,78 @@ if "chat_session" not in st.session_state:
     st.session_state.chat_session = None
 
 # Sidebar for model and temperature selection
-with st.sidebar:
+#with st.sidebar:
     st.title("Settings")
     st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
     model_option = st.selectbox(
         "Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
     )
-    if model_option != st.session_state.model_name:
+    #if model_option != st.session_state.model_name:
         st.session_state.model_name = model_option
         st.session_state.messages = []
         st.session_state.chat_session = None
-    temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
-    st.session_state.temperature = temperature
+    #temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
+   # st.session_state.temperature = temperature
 
 # Modify the info e.g., ['Bot_Name'] and "Bot Name:" for your purposes. You can also add/delete questions to fit your goals.
-    st.title("Enter Background Information Here")
-    with st.form("user_form"):
-        st.session_state.form_responses['Academic_read'] = st.text_input("Student Reading Performance - below average, average, above average:", key="Academic_read")
-        st.session_state.form_responses['Academic_math'] = st.text_input("Student Math Performance - below average, average, above average:", key="Academic_math")
-        st.session_state.form_responses['SRSS_I'] = st.text_input("SRSS-Internalizing Score:", key="SRSS_I")
-        st.session_state.form_responses['SRSS-E'] = st.text_input("SRSS-Externalizing Score:", key="SRSS-E")
-        st.session_state.form_responses['Days_missed'] = st.text_input("Number of Days Student has Missed:", key="Days_missed")
-        st.session_state.form_responses['ODRs'] = st.text_input("Number of Office Discipline Referrals Earned:", key="ODRs")
+    # Modify the bot name and form title as needed.
+BOT_NAME = "Intervention Bot"
+st.title(f"Enter Background Information for {BOT_NAME}")
+
+# Create a form to capture student background information
+with st.form("user_form"):
+    st.session_state.form_responses = {}
+
+    # Dropdown for Reading Performance
+    st.session_state.form_responses['Academic_read'] = st.selectbox(
+        "Student Reading Performance:", 
+        options=["below average", "average", "above average"], 
+        key="Academic_read"
+    )
+
+    # Dropdown for Math Performance
+    st.session_state.form_responses['Academic_math'] = st.selectbox(
+        "Student Math Performance:", 
+        options=["below average", "average", "above average"], 
+        key="Academic_math"
+    )
+
+    # Dropdown for SRSS-Internalizing Score
+    st.session_state.form_responses['SRSS_I'] = st.selectbox(
+        "SRSS-Internalizing Score:", 
+        options=["Low", "Moderate", "High"], 
+        key="SRSS_I"
+    )
+
+    # Dropdown for SRSS-Externalizing Score
+    st.session_state.form_responses['SRSS_E'] = st.selectbox(
+        "SRSS-Externalizing Score:", 
+        options=["Low", "Moderate", "High"], 
+        key="SRSS_E"
+    )
+
+    # Dropdown for Days Missed
+    st.session_state.form_responses['Days_missed'] = st.selectbox(
+        "Number of Days Student has Missed:", 
+        options=["0-5 days", "6-10 days", "11-15 days", "16+ days"], 
+        key="Days_missed"
+    )
+
+    # Dropdown for Office Discipline Referrals
+    st.session_state.form_responses['ODRs'] = st.selectbox(
+        "Number of Office Discipline Referrals Earned:", 
+        options=["0-1 referrals", "2-3 referrals", "4-5 referrals", "6+ referrals"], 
+        key="ODRs"
+    )
+    
+    # Submit button logic
+    submit_button = st.form_submit_button("Submit Responses")
+    if submit_button:
+        # All fields will have values by default with drop-downs, so no need for empty check
+        st.session_state.form_submitted = True
+        st.session_state.should_generate_response = True
+        st.success("Thank you! Your responses have been recorded.")
+
         
         submit_button = st.form_submit_button("Submit Responses")
         if submit_button:
