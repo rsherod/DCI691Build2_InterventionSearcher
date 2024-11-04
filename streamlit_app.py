@@ -68,7 +68,7 @@ with st.sidebar:
         st.session_state.chat_session = None
 
     # Create a form to capture student background information
-    st.title(f"Enter Background Information for Intervention Bot")
+    st.title(f"Enter Student Information Here:")
 
     if 'form_responses' not in st.session_state:
         st.session_state.form_responses = {}
