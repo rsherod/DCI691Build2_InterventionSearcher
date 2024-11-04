@@ -122,25 +122,29 @@ with st.sidebar:
             st.session_state.form_submitted = True
             st.session_state.should_generate_response = True
             st.success("Thank you! Your responses have been recorded.")
-# Process uploaded PDF
-if uploaded_pdf:
-    try:
-        # Upload file using File API with mime_type specified
-        uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
-        st.session_state.uploaded_file = uploaded_file
-        st.success("File uploaded successfully!")
-                  
-    except Exception as e:
-        st.error(f"Error uploading file: {e}")
-        st.session_state.debug.append(f"File upload error: {e}")
 
-# Clear chat function
-if clear_button:
-    st.session_state.messages = []
-    st.session_state.debug = []
-    st.session_state.pdf_content = ""
-    st.session_state.chat_session = None
-    st.rerun()
+    # File upload for PDF
+    uploaded_pdf = st.file_uploader("Upload PDF:", type=["pdf"])
+    
+    if uploaded_pdf:
+        try:
+            # Upload file using File API with mime_type specified
+            uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
+            st.session_state.uploaded_file = uploaded_file
+            st.success("File uploaded successfully!")
+        except Exception as e:
+            st.error(f"Error uploading file: {e}")
+            st.session_state.debug.append(f"File upload error: {e}")
+
+    # Clear chat functionality
+    clear_button = st.button("Clear Chat")
+    if clear_button:
+        st.session_state.messages = []
+        st.session_state.debug = []
+        st.session_state.pdf_content = ""
+        st.session_state.chat_session = None
+        st.success("Chat cleared!")
+        st.experimental_rerun()  # use rerun to refresh the app
 
 # Load system prompt
 def load_text_file(file_path):
