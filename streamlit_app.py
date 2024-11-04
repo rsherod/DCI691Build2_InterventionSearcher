@@ -53,25 +53,34 @@ if "chat_session" not in st.session_state:
 with st.sidebar:
     st.title("Settings")
     st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
+    
+    # Ensure model_name is initialized
+    if 'model_name' not in st.session_state:
+        st.session_state.model_name = "gemini-1.5-flash-002"  # default model
+
     model_option = st.selectbox(
         "Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
     )
+    
     if model_option != st.session_state.model_name:
         st.session_state.model_name = model_option
         st.session_state.messages = []
         st.session_state.chat_session = None
-    #temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
-   # st.session_state.temperature = temperature
+        
+    # Uncomment and finalize this if you plan to use temperature setting
+    # temperature = st.slider("Temperature:", 0.0, 1.0, st.session_state.temperature, 0.1)
+    # st.session_state.temperature = temperature
 
-# Modify the info e.g., ['Bot_Name'] and "Bot Name:" for your purposes. You can also add/delete questions to fit your goals.
-    # Modify the bot name and form title as needed.
+# Modify the bot name and form title as needed.
 BOT_NAME = "Intervention Bot"
 st.title(f"Enter Background Information for {BOT_NAME}")
 
-# Create a form to capture student background information
-with st.form("user_form"):
+# Ensure form_responses is initialized before the form
+if 'form_responses' not in st.session_state:
     st.session_state.form_responses = {}
 
+# Create a form to capture student background information
+with st.form("user_form"):
     # Dropdown for Reading Performance
     st.session_state.form_responses['Academic_read'] = st.selectbox(
         "Student Reading Performance:", 
