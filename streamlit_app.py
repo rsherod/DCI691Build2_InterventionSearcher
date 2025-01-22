@@ -72,14 +72,14 @@ with st.sidebar:
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
     
     if uploaded_pdf and 'pdf_uploaded' not in st.session_state:
-    try:
-        uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
-        st.session_state.uploaded_file = uploaded_file
-        st.session_state.pdf_uploaded = True
-        st.success("File uploaded successfully!")
-    except Exception as e:
-        st.error(f"Error uploading file: {e}")
-        st.session_state.debug.append(f"File upload error: {e}")
+        try:
+            uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
+            st.session_state.uploaded_file = uploaded_file
+            st.session_state.pdf_uploaded = True
+            st.success("File uploaded successfully!")
+        except Exception as e:
+            st.error(f"Error uploading file: {e}")
+            st.session_state.debug.append(f"File upload error: {e}")
     # Create a form to capture student background information
     st.title(f"Enter Student Information Here:")
 
