@@ -165,8 +165,12 @@ for message in st.session_state.messages:
 
 # Handle form submission and generate response
 if st.session_state.should_generate_response:
+    if not hasattr(st.session_state, 'uploaded_file'):
+        st.error("Please upload the intervention grid first.")
+        st.session_state.should_generate_response = False
+        return
     # Create combined prompt from responses
-    combined_prompt = "Form Responses:\n"
+     combined_prompt = "Form Responses:\n"
     for q, a in st.session_state.form_responses.items():
         combined_prompt += f"{q}: {a}\n"
     
