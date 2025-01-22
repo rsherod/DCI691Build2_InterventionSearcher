@@ -39,7 +39,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-1.5-pro-002"
+    st.session_state.model_name = "gemini-exp-1206"
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
@@ -52,7 +52,7 @@ if "chat_session" not in st.session_state:
 # Sidebar for model and temperature selection
 with st.sidebar:
     st.title("Settings")
-    st.caption("Note: Gemini-1.5-pro-002 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
+    st.caption("Note: gemini-exp-1206 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
     
     # Ensure model_name is initialized
     if 'model_name' not in st.session_state:
