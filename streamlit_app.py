@@ -56,10 +56,10 @@ with st.sidebar:
     
     # Ensure model_name is initialized
     if 'model_name' not in st.session_state:
-        st.session_state.model_name = "gemini-1.5-flash-002"  # default model
+        st.session_state.model_name = "gemini-2.0-flash-exp"  # default model
 
     model_option = st.selectbox(
-        "Select Model:", ["gemini-1.5-flash-002", "gemini-1.5-pro-002"]
+        "Select Model:", ["gemini-2.0-flash-exp", "gemini-exp-1206"]
     )
     
     if model_option != st.session_state.model_name:
