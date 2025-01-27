@@ -239,7 +239,7 @@ Form Responses:
                 except Exception as e:
                     st.error(f"Error initializing chat session: {str(e)}")
                     st.session_state.debug.append(f"Chat initialization error: {str(e)}")
-                    return
+                    st.stop()  # Use st.stop() instead of return
 
             # Generate response with error handling
             try:
@@ -299,10 +299,10 @@ if user_input:
             except Exception as e:
                 st.error(f"Error initializing chat session: {str(e)}")
                 st.session_state.debug.append(f"Chat initialization error: {str(e)}")
-                return
+                st.stop()  # Use st.stop() instead of return
 
         try:
-            response = st.session_state.chat_session.send_message(current_message["content"])
+            response = st.session_state.chat_session.send_message(user_input)
             full_response = response.text
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
