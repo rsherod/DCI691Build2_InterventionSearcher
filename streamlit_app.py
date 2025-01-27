@@ -2,23 +2,36 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
+import PyPDF2
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
 
-# Add this code between st.set_page_config(page_title="Streamlit Chatbot", layout="wide") and Display image code block
+# Initialize all session state variables
 if "form_submitted" not in st.session_state:
     st.session_state.form_submitted = False
 if "form_responses" not in st.session_state:
     st.session_state.form_responses = {}
 if "should_generate_response" not in st.session_state:
     st.session_state.should_generate_response = False
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "model_name" not in st.session_state:
+    st.session_state.model_name = "gemini-pro"
+if "temperature" not in st.session_state:
+    st.session_state.temperature = 0.5
+if "debug" not in st.session_state:
+    st.session_state.debug = []
+if "pdf_content" not in st.session_state:
+    st.session_state.pdf_content = ""
+if "pdf_uploaded" not in st.session_state:
+    st.session_state.pdf_uploaded = False
+if "uploaded_file" not in st.session_state:
+    st.session_state.uploaded_file = None
+if "chat_session" not in st.session_state:
+    st.session_state.chat_session = None
 
 # Display image
-# This code attempts to open and display an image file named 'Build2.png'.
-# If successful, it shows the image with a caption. If there's an error, it displays an error message instead.
-# You can customize this by changing the image file name and path. Supported image types include .png, .jpg, .jpeg, and .gif.
-# To use a different image, replace 'Build2.png' with your desired image file name (e.g., 'my_custom_image.jpg').
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
@@ -27,39 +40,20 @@ except Exception as e:
     st.error(f"Error loading image: {e}")
 
 # Title and BotDescription 
-# You can customize the title, description, and caption by modifying the text within the quotes.
 st.title("Welcome to the Intervention Grid Searcher!")
 st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school. \n\nDirections: Use the panel on the left to upload the Tier 2 and Tier 3 Intervention Grid from your school. Then, answer the questions about the student or group of students you are interested in selecting an intervention for.")
-st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or studnets.")
+st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or students.")
 
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
-# Initialize session state
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-exp-1206"
-if "temperature" not in st.session_state:
-    st.session_state.temperature = 0.5
-if "debug" not in st.session_state:
-    st.session_state.debug = []
-if "pdf_content" not in st.session_state:
-    st.session_state.pdf_content = ""
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = None
-
 # Sidebar for model and temperature selection
 with st.sidebar:
     st.title("Settings")
-    st.caption("Note: gemini-exp-1206 can only handle 2 requests per minute, gemini-1.5-flash-002 can handle 15 per minute")
+    st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
     
-    # Ensure model_name is initialized
-    if 'model_name' not in st.session_state:
-        st.session_state.model_name = "gemini-2.0-flash-exp"  # default model
-
     model_option = st.selectbox(
-        "Select Model:", ["gemini-2.0-flash-exp", "gemini-exp-1206"]
+        "Select Model:", ["gemini-pro", "gemini-pro-vision"]
     )
     
     if model_option != st.session_state.model_name:
@@ -67,19 +61,40 @@ with st.sidebar:
         st.session_state.messages = []
         st.session_state.chat_session = None
    
-    # File upload for PDF
+    # Improved File upload section
     st.title("Upload Intervention Grid Here:")
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
-    
-    if uploaded_pdf and 'pdf_uploaded' not in st.session_state:
+
+    if uploaded_pdf:
         try:
+            # Read PDF content using PyPDF2
+            pdf_reader = PyPDF2.PdfReader(uploaded_pdf)
+            pdf_text = ""
+            for page in pdf_reader.pages:
+                pdf_text += page.extract_text()
+            
+            # Store PDF content in session state
+            st.session_state.pdf_content = pdf_text
+            st.session_state.pdf_uploaded = True
+            
+            # Prepare file for Gemini
             uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
             st.session_state.uploaded_file = uploaded_file
-            st.session_state.pdf_uploaded = True
-            st.success("File uploaded successfully!")
+            
+            st.success("✅ Intervention Grid uploaded and processed successfully!")
+            
+            # Add debug information
+            st.session_state.debug.append("PDF processed and stored in session state")
+            st.session_state.debug.append(f"PDF length: {len(pdf_text)} characters")
+            
         except Exception as e:
-            st.error(f"Error uploading file: {e}")
-            st.session_state.debug.append(f"File upload error: {e}")
+            st.error(f"Error processing file: {str(e)}")
+            st.session_state.debug.append(f"File processing error: {str(e)}")
+            # Reset states on error
+            st.session_state.pdf_content = ""
+            st.session_state.pdf_uploaded = False
+            st.session_state.uploaded_file = None
+    
     # Create a form to capture student background information
     st.title(f"Enter Student Information Here:")
 
@@ -132,10 +147,12 @@ with st.sidebar:
         # Submit button for the form
         submit_button = st.form_submit_button("Submit Responses")
         if submit_button:
-            st.session_state.form_submitted = True
-            st.session_state.should_generate_response = True
-            st.success("Thank you! Your responses have been recorded.")
-
+            if not st.session_state.pdf_uploaded:
+                st.error("Please upload the Intervention Grid first before submitting the form.")
+            else:
+                st.session_state.form_submitted = True
+                st.session_state.should_generate_response = True
+                st.success("Thank you! Your responses have been recorded.")
     
     # Clear chat functionality
     clear_button = st.button("Clear Chat")
@@ -144,8 +161,10 @@ with st.sidebar:
         st.session_state.debug = []
         st.session_state.pdf_content = ""
         st.session_state.chat_session = None
+        st.session_state.pdf_uploaded = False
+        st.session_state.uploaded_file = None
         st.success("Chat cleared!")
-        st.experimental_rerun()  # use rerun to refresh the app
+        st.experimental_rerun()
 
 # Load system prompt
 def load_text_file(file_path):
@@ -165,68 +184,78 @@ for message in st.session_state.messages:
 
 # Handle form submission and generate response
 if st.session_state.should_generate_response:
-    if not hasattr(st.session_state, 'uploaded_file'):
+    if not st.session_state.pdf_uploaded:
         st.error("Please upload the intervention grid first.")
         st.session_state.should_generate_response = False
         st.rerun()
     else:    
-        combined_prompt = "Form Responses:\n"
+        combined_prompt = f"""Using the uploaded intervention grid, please analyze the following student information:
+
+Form Responses:
+"""
         for q, a in st.session_state.form_responses.items():
             combined_prompt += f"{q}: {a}\n"
+        
+        combined_prompt += "\nPlease analyze this information against the intervention grid and suggest appropriate interventions."
     
-    # Add user message to chat history
-    current_message = {"role": "user", "content": combined_prompt}
-    st.session_state.messages.append(current_message)
+        # Add user message to chat history
+        current_message = {"role": "user", "content": combined_prompt}
+        st.session_state.messages.append(current_message)
 
-    with st.chat_message("user"):
-        st.markdown(current_message["content"])
+        with st.chat_message("user"):
+            st.markdown(current_message["content"])
 
-    # Generate and display assistant response
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
+        # Generate and display assistant response
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
 
-        # Initialize chat session if needed
-        if st.session_state.chat_session is None:
-            generation_config = {
-                "temperature": st.session_state.temperature,
-                "top_p": 0.95,
-                "top_k": 40,
-                "max_output_tokens": 8192,
-            }
-            model = genai.GenerativeModel(
-                model_name=st.session_state.model_name,
-                generation_config=generation_config,
-            )
-            
-            initial_messages = [
-                {"role": "user", "parts": [f"System: {system_prompt}"]},
-                {"role": "model", "parts": ["Understood. I will follow these instructions."]},
-            ]
-            
-            if st.session_state.pdf_content:
-                initial_messages.extend([
-                    {"role": "user", "parts": [f"The following is the content of an uploaded PDF document. Please consider this information when responding to user queries:\n\n{st.session_state.pdf_content}"]},
-                    {"role": "model", "parts": ["I have received and will consider the PDF content in our conversation."]}
-                ])
-            
-            st.session_state.chat_session = model.start_chat(history=initial_messages)
+            # Initialize chat session if needed
+            if st.session_state.chat_session is None:
+                try:
+                    generation_config = {
+                        "temperature": st.session_state.temperature,
+                        "top_p": 0.95,
+                        "top_k": 40,
+                        "max_output_tokens": 4096,
+                    }
+                    model = genai.GenerativeModel(
+                        model_name=st.session_state.model_name,
+                        generation_config=generation_config,
+                    )
+                    
+                    initial_messages = [
+                        {"role": "user", "parts": [f"System: {system_prompt}"]},
+                        {"role": "model", "parts": ["Understood. I will follow these instructions."]},
+                    ]
+                    
+                    if st.session_state.pdf_content:
+                        initial_messages.extend([
+                            {"role": "user", "parts": [f"Here is the intervention grid content to use for analysis:\n\n{st.session_state.pdf_content}"]},
+                            {"role": "model", "parts": ["I have received the intervention grid content and will use it for analysis."]}
+                        ])
+                    
+                    st.session_state.chat_session = model.start_chat(history=initial_messages)
+                    st.session_state.debug.append("Chat session initialized successfully")
+                except Exception as e:
+                    st.error(f"Error initializing chat session: {str(e)}")
+                    st.session_state.debug.append(f"Chat initialization error: {str(e)}")
+                    return
 
-        # Generate response with error handling
-        try:
-            response = st.session_state.chat_session.send_message(current_message["content"])
-            full_response = response.text
-            message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-            st.session_state.debug.append("Assistant response generated")
-        except Exception as e:
-            st.error(f"An error occurred while generating the response: {e}")
-            st.session_state.debug.append(f"Error: {e}")
+            # Generate response with error handling
+            try:
+                response = st.session_state.chat_session.send_message(combined_prompt)
+                full_response = response.text
+                message_placeholder.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                st.session_state.debug.append("Assistant response generated")
+            except Exception as e:
+                st.error(f"An error occurred while generating the response: {str(e)}")
+                st.session_state.debug.append(f"Response generation error: {str(e)}")
 
-    st.session_state.should_generate_response = False
-    st.rerun()
+        st.session_state.should_generate_response = False
+        st.rerun()
 
-# User input
-# The placeholder text "Your message:" can be customized to any desired prompt, e.g., "Message Creative Assistant...".
+# User input handling
 user_input = st.chat_input("Type here:")
 
 if user_input:
@@ -241,59 +270,50 @@ if user_input:
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
 
-        # Prepare messages for Gemini API
         if st.session_state.chat_session is None:
-            generation_config = {
-                "temperature": st.session_state.temperature,
-                "top_p": 0.95,
-                "top_k": 40,
-                "max_output_tokens": 8192,
-            }
-            model = genai.GenerativeModel(
-                model_name=st.session_state.model_name,
-                generation_config=generation_config,
-            )
-            
-            # Initialize chat with system prompt and PDF content
-            initial_messages = [
-                {"role": "user", "parts": [f"System: {system_prompt}"]},
-                {"role": "model", "parts": ["Understood. I will follow these instructions."]},
-            ]
-            
-            if st.session_state.pdf_content:
-                initial_messages.extend([
-                    {"role": "user", "parts": [f"The following is the content of an uploaded PDF document. Please consider this information when responding to user queries:\n\n{st.session_state.pdf_content}"]},
-                    {"role": "model", "parts": ["I have received and will consider the PDF content in our conversation."]}
-                ])
-            
-            st.session_state.chat_session = model.start_chat(history=initial_messages)
+            try:
+                generation_config = {
+                    "temperature": st.session_state.temperature,
+                    "top_p": 0.95,
+                    "top_k": 40,
+                    "max_output_tokens": 4096,
+                }
+                model = genai.GenerativeModel(
+                    model_name=st.session_state.model_name,
+                    generation_config=generation_config,
+                )
+                
+                initial_messages = [
+                    {"role": "user", "parts": [f"System: {system_prompt}"]},
+                    {"role": "model", "parts": ["Understood. I will follow these instructions."]},
+                ]
+                
+                if st.session_state.pdf_content:
+                    initial_messages.extend([
+                        {"role": "user", "parts": [f"Here is the intervention grid content to use for analysis:\n\n{st.session_state.pdf_content}"]},
+                        {"role": "model", "parts": ["I have received the intervention grid content and will use it for analysis."]}
+                    ])
+                
+                st.session_state.chat_session = model.start_chat(history=initial_messages)
+                st.session_state.debug.append("Chat session initialized successfully")
+            except Exception as e:
+                st.error(f"Error initializing chat session: {str(e)}")
+                st.session_state.debug.append(f"Chat initialization error: {str(e)}")
+                return
 
-        # Generate response with error handling
         try:
-            if st.session_state.uploaded_file:
-                # If there's an uploaded file, include it in the generation
-                response = st.session_state.chat_session.send_message([
-                    st.session_state.uploaded_file,
-                    current_message["content"]
-                ])
-            else:
-                # Otherwise, just use the text prompt
-                response = st.session_state.chat_session.send_message(current_message["content"])
-
+            response = st.session_state.chat_session.send_message(current_message["content"])
             full_response = response.text
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.session_state.debug.append("Assistant response generated")
-
         except Exception as e:
-            st.error(f"An error occurred while generating the response: {e}")
-            st.session_state.debug.append(f"Error: {e}")
+            st.error(f"An error occurred while generating the response: {str(e)}")
+            st.session_state.debug.append(f"Response generation error: {str(e)}")
 
     st.rerun()
 
 # Debug information
-# You can remove this by adding # in front of each line
-
 st.sidebar.title("Debug Info")
 for debug_msg in st.session_state.debug:
     st.sidebar.text(debug_msg)
