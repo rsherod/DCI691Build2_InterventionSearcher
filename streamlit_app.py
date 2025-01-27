@@ -2,7 +2,6 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
-import PyPDF2
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -17,13 +16,15 @@ if "should_generate_response" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-pro"
+    st.session_state.model_name = "gemini-exp-1206"
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
     st.session_state.debug = []
 if "pdf_content" not in st.session_state:
     st.session_state.pdf_content = ""
+if "chat_session" not in st.session_state:
+    st.session_state.chat_session = None
 if "pdf_uploaded" not in st.session_state:
     st.session_state.pdf_uploaded = False
 if "uploaded_file" not in st.session_state:
