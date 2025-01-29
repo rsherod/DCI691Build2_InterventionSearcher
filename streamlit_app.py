@@ -36,7 +36,7 @@ if "chat_session" not in st.session_state:
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
-    st.image(image, caption='Created by Rebecca Sherod (2024)\nThis work was supported, in part, by ASU\'s Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.', use_column_width=True)
+    st.image(image, caption='Created by Rebecca Sherod (2024)<br>This work was supported, in part, by ASU\'s Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.', use_column_width=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
