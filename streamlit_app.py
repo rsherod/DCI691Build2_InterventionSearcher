@@ -36,9 +36,13 @@ if "chat_session" not in st.session_state:
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
-    st.image(image, use_column_width=True)
-    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
+    # Create three columns with the middle one being wider
+    col1, col2, col3 = st.columns([1,4,1])
+    # Display the image in the middle column
+    with col2:
+        st.image(image, use_container_width=True)
+        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
