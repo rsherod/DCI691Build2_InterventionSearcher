@@ -94,7 +94,7 @@ with st.sidebar:
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
 
- if uploaded_pdf:
+    if uploaded_pdf:
         pdf_text, error = process_pdf(uploaded_pdf)
         
         if error:
