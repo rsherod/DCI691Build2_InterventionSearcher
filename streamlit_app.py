@@ -54,7 +54,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 # Sidebar for model and temperature selection
 with st.sidebar:
-    st.title("Settings")
+    st.markdown("<h1 style='text-align: center;'>Settings</h1>", unsafe_allow_html=True)
     st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
     
     model_option = st.selectbox(
