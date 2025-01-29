@@ -42,7 +42,7 @@ except Exception as e:
 
 # Title and BotDescription 
 st.title("Welcome to the Intervention Grid Searcher!")
-st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school. \n\nDirections: Use the panel on the left to upload the Tier 2 and Tier 3 Intervention Grid from your school. Then, answer the questions about the student or group of students you are interested in selecting an intervention for.")
+st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the grids at your school. \n\nDirections: Use the panel on the left to upload the Tier 2 and Tier 3 Intervention Grid from your school. Then, answer the questions about the student or group of students you are interested in selecting an intervention for. When you are ready, hit "Submit Responses"")
 st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or students.")
 
 # Initialize Gemini client
