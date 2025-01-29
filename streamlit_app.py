@@ -67,7 +67,7 @@ with st.sidebar:
         st.session_state.chat_session = None
    
     # Improved File upload section
-    st.title("Upload Intervention Grid Here:")
+    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid Here:</h1>", unsafe_allow_html=True)
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
 
     if uploaded_pdf:
@@ -101,7 +101,7 @@ with st.sidebar:
             st.session_state.uploaded_file = None
     
     # Create a form to capture student background information
-    st.title(f"Enter Student Information Here:")
+    st.markdown("<h1 style='text-align: center;'>Student Information</h1>", unsafe_allow_html=True)
 
     if 'form_responses' not in st.session_state:
         st.session_state.form_responses = {}
@@ -319,6 +319,6 @@ if user_input:
     st.rerun()
 
 # Debug information
-st.sidebar.title("Debug Info")
+st.markdown("<h1 style='text-align: center;'>Debug Info</h1>", unsafe_allow_html=True)
 for debug_msg in st.session_state.debug:
     st.sidebar.text(debug_msg)
