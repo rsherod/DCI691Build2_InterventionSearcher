@@ -319,6 +319,6 @@ if user_input:
     st.rerun()
 
 # Debug information
-st.markdown("<h1 style='text-align: center;'>Debug Info</h1>", unsafe_allow_html=True)
+st.sidebar.title("Debug Info")
 for debug_msg in st.session_state.debug:
     st.sidebar.text(debug_msg)
