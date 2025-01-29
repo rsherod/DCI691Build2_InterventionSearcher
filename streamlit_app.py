@@ -36,11 +36,8 @@ if "chat_session" not in st.session_state:
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
-    # Create three columns with the middle one being wider
-    col1, col2, col3 = st.columns([1,4,1])
-    # Display the image in the middle column
-    with col2:
-        st.image(image, caption='Created by Rebecca Sherod (2024)', use_container_width=True)
+    st.image(image, caption='Created by Rebecca Sherod (2024)', use_column_width=True)
+    st.write(This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this work represent those of the author(s) and not ASU or MLFTC.)  
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
