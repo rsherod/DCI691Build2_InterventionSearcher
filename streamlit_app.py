@@ -67,7 +67,7 @@ with st.sidebar:
         st.session_state.chat_session = None
    
     # Improved File upload section
-    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid Here:</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
 
     if uploaded_pdf:
