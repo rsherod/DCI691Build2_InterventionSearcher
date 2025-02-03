@@ -311,3 +311,48 @@ if user_input:
 
         if st.session_state.chat_session is None:
             try:
+                generation_config = {
+                    "temperature": st.session_state.temperature,
+                    "top_p": 0.95,
+                    "top_k": 40,
+                    "max_output_tokens": 4096,
+                }
+                model = genai.GenerativeModel(
+                    model_name=st.session_state.model_name,
+                    generation_config=generation_config,
+                )
+                
+                initial_messages = [
+                    {"role": "user", "parts": [f"System: {system_prompt}"]},
+                    {"role": "model", "parts": ["Understood. I will follow these instructions."]},
+                ]
+                
+                if st.session_state.pdf_content:
+                    initial_messages.extend([
+                        {"role": "user", "parts": [f"Here is the intervention grid content to use for analysis:\n\n{st.session_state.pdf_content}"]},
+                        {"role": "model", "parts": ["I have received the intervention grid content and will use it for analysis."]}
+                    ])
+                
+                st.session_state.chat_session = model.start_chat(history=initial_messages)
+                st.session_state.debug.append("Chat session initialized successfully")
+            except Exception as e:
+                st.error(f"Error initializing chat session: {str(e)}")
+                st.session_state.debug.append(f"Chat initialization error: {str(e)}")
+                st.stop()  # Use st.stop() instead of return
+
+        try:
+            response = st.session_state.chat_session.send_message(user_input)
+            full_response = response.text
+            message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.debug.append("Assistant response generated")
+        except Exception as e:
+            st.error(f"An error occurred while generating the response: {str(e)}")
+            st.session_state.debug.append(f"Response generation error: {str(e)}")
+
+    st.rerun()
+
+# Debug information
+st.sidebar.title("Debug Info")
+for debug_msg in st.session_state.debug:
+    st.sidebar.text(debug_msg)
