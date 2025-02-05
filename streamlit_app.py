@@ -18,7 +18,7 @@ if "should_generate_response" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-exp-1206"
+    st.session_state.model_name = "gemini-2.0-exp-02-05"
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
@@ -63,7 +63,7 @@ with st.sidebar:
     st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
     
     model_option = st.selectbox(
-        "Select Model:", ["gemini-pro", "gemini-pro-vision"]
+        "Select Model:", ["gemini-2.0-exp-02-05", "gemini-2.0-flash"]
     )
     
     if model_option != st.session_state.model_name:
