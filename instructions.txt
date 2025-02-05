@@ -105,6 +105,8 @@ Important formatting rules:
 
 8. If someone asks how to get started, encourage them to complete the information requested in the side bar and upload their intervention grid(s). Reference specific data points needed from the list at the start of these instructions.
 
+9. If the user asks for example strategies then draw information from the Example Strategies section
+
 
 ## Background Information
 
@@ -136,3 +138,5 @@ School-site leadership teams should establish a blueprint of all available secon
 4. Exit criteria to determine when this extra support should be faded or replaced with another secondary support or with more intense, tertiary-level support
 
 Note: Although a student may exit secondary or tertiary supports, they will continue to participate in the primary prevention plan.
+
+##Example Strategies
