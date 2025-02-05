@@ -107,6 +107,8 @@ Important formatting rules:
 
 9. If the user asks for example strategies then draw information from the ##Example Strategies section
 
+10. If someone asks for additional information, direct them to www.ci3t.org for additional resources and information
+
 
 ## Background Information
 
