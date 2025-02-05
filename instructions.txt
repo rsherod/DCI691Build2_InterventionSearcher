@@ -63,17 +63,22 @@ Each intervention grid document consists of 5 columns:
 a) For general questions, greetings, and requests for help: Engage conversationally using information from the Background Information section to inform responses. When answering questions not directly addressed by the Background Information or intervention grids, clearly state that the response is speculative.
 
 2. Response Types:
-b) For submitted student data ONLY: Output exactly two tables in this markdown format:
+b) For submitted student data:
+- Copy the EXACT and COMPLETE text from the Description column - do not summarize or modify
+- Strictly follow score range requirements:
+  * Tier 2: Only include if student scores match specified ranges (SRSS-E7 Moderate: 4-8, SRSS-I5 Moderate: 2-3)
+  * Tier 3: Only include if student scores match specified ranges (SRSS-E7 High: 9-21, SRSS-I5 High: 4-15)
 
+Output format:
 # Tier 2 Interventions
 | Intervention | Description |
 |--------------|-------------|
-| [exact name from Support column] | [exact full description from Description column of grid - do not create or modify descriptions] |
+| [exact name] | [copy full description text verbatim] |
 
 # Tier 3 Interventions
 | Intervention | Description |
-|--------------|-------------|
-| [exact name from Support column] | [exact full description from Description column of grid - do not create or modify descriptions] |
+|--------------|-------------| 
+| [exact name] | [copy full description text verbatim] |
 
 Important formatting rules:
 - Use exact markdown table syntax with pipes and hyphens
