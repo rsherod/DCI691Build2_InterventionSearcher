@@ -232,14 +232,14 @@ Form Responses:
                     st.stop()
 
             try:
-                message_parts = []
+                # First, send PDFs to establish context
                 if st.session_state.uploaded_files["tier2"]:
-                    message_parts.append(st.session_state.uploaded_files["tier2"])
+                    st.session_state.chat_session.send_message(st.session_state.uploaded_files["tier2"])
                 if st.session_state.uploaded_files["tier3"]:
-                    message_parts.append(st.session_state.uploaded_files["tier3"])
-                message_parts.append(current_message["content"])
-                
-                response = st.session_state.chat_session.send_message(message_parts)
+                    st.session_state.chat_session.send_message(st.session_state.uploaded_files["tier3"])
+                    
+                # Then send the actual prompt
+                response = st.session_state.chat_session.send_message(current_message["content"])
                 full_response = response.text
                 message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
@@ -290,14 +290,8 @@ if user_input:
                 st.stop()
 
         try:
-            message_parts = []
-            if st.session_state.uploaded_files["tier2"]:
-                message_parts.append(st.session_state.uploaded_files["tier2"])
-            if st.session_state.uploaded_files["tier3"]:
-                message_parts.append(st.session_state.uploaded_files["tier3"])
-            message_parts.append(user_input)
-            
-            response = st.session_state.chat_session.send_message(message_parts)
+            # Send the user input directly
+            response = st.session_state.chat_session.send_message(user_input)
             full_response = response.text
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
