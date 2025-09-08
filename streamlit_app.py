@@ -110,7 +110,7 @@ with st.sidebar:
 
     with st.form("user_form"):
         st.session_state.form_responses['Academic_read'] = st.selectbox(
-            "Student Reading Performance:", 
+            "Student <b>Reading</b> Performance:", 
             options=["Click to select", "below average", "average", "above average"], 
             key="Academic_read"
         )
