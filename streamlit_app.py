@@ -3,6 +3,8 @@ import streamlit as st
 import google.generativeai as genai
 from PIL import Image
 import io 
+import time
+from datetime import datetime, timedelta
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -17,7 +19,7 @@ if "should_generate_response" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-2.0-pro-exp-02-05"
+    st.session_state.model_name = "gemini-2.0-flash"  # Changed default to flash
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
@@ -30,8 +32,75 @@ if "pdf_uploaded" not in st.session_state:
     st.session_state.pdf_uploaded = False
 if "uploaded_files" not in st.session_state:
     st.session_state.uploaded_files = {"tier2": None, "tier3": None}
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = None
+if "last_request_time" not in st.session_state:
+    st.session_state.last_request_time = None
+if "request_count" not in st.session_state:
+    st.session_state.request_count = 0
+
+# Rate limiting configuration
+MIN_REQUEST_INTERVAL = 65  # 65 seconds between requests to be safe
+MAX_RETRIES = 3
+RETRY_DELAY = 70  # 70 seconds between retries
+
+def can_make_request():
+    """Check if enough time has passed since the last request"""
+    if st.session_state.last_request_time is None:
+        return True
+    
+    time_since_last = time.time() - st.session_state.last_request_time
+    return time_since_last >= MIN_REQUEST_INTERVAL
+
+def get_wait_time():
+    """Get remaining wait time in seconds"""
+    if st.session_state.last_request_time is None:
+        return 0
+    
+    time_since_last = time.time() - st.session_state.last_request_time
+    remaining = MIN_REQUEST_INTERVAL - time_since_last
+    return max(0, remaining)
+
+def make_api_request(chat_session, message, uploaded_files=None):
+    """Make an API request with rate limiting and retry logic"""
+    for attempt in range(MAX_RETRIES):
+        try:
+            # Check rate limit
+            if not can_make_request():
+                wait_time = get_wait_time()
+                st.warning(f"⏱️ Rate limit protection: Please wait {int(wait_time)} seconds before making another request.")
+                return None
+            
+            # Send uploaded files first if provided
+            if uploaded_files:
+                if uploaded_files.get("tier2"):
+                    chat_session.send_message(uploaded_files["tier2"])
+                    time.sleep(2)  # Small delay between file uploads
+                if uploaded_files.get("tier3"):
+                    chat_session.send_message(uploaded_files["tier3"])
+                    time.sleep(2)
+            
+            # Send the actual message
+            response = chat_session.send_message(message)
+            st.session_state.last_request_time = time.time()
+            st.session_state.request_count += 1
+            st.session_state.debug.append(f"Request {st.session_state.request_count} successful")
+            return response
+            
+        except Exception as e:
+            error_str = str(e)
+            if "429" in error_str or "quota" in error_str.lower():
+                st.session_state.debug.append(f"Rate limit hit on attempt {attempt + 1}")
+                if attempt < MAX_RETRIES - 1:
+                    st.warning(f"⏱️ Rate limit reached. Waiting {RETRY_DELAY} seconds before retry {attempt + 2}/{MAX_RETRIES}...")
+                    time.sleep(RETRY_DELAY)
+                else:
+                    st.error("❌ Rate limit exceeded. Please wait at least 2 minutes before trying again.")
+                    return None
+            else:
+                st.error(f"API Error: {error_str}")
+                st.session_state.debug.append(f"API error: {error_str}")
+                return None
+    
+    return None
 
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
@@ -50,6 +119,14 @@ st.subheader("Welcome to the Intervention Grid Searcher!")
 st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the intervention grids at your school. \n\nDirections: Use the panel on the left to upload the Tier 2 and Tier 3 Intervention Grid from your school. Then, answer the questions about the student or group of students you are interested in selecting an intervention for. When you are ready, hit 'Submit Responses' to begin the process.")
 st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or students.")
 
+# Rate limit status indicator
+if st.session_state.last_request_time:
+    wait_time = get_wait_time()
+    if wait_time > 0:
+        st.info(f"⏱️ Rate limit cooldown: {int(wait_time)} seconds remaining")
+    else:
+        st.success("✅ Ready to make requests")
+
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
@@ -59,13 +136,27 @@ with st.sidebar:
     st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
     
     model_option = st.selectbox(
-        "Select Model:", ["gemini-2.0-pro-exp-02-05", "gemini-2.0-flash"]
+        "Select Model:", ["gemini-2.0-flash", "gemini-2.0-pro-exp-02-05"],  # Reordered to have flash first
+        index=0  # Default to first option (flash)
     )
     
     if model_option != st.session_state.model_name:
         st.session_state.model_name = model_option
         st.session_state.messages = []
         st.session_state.chat_session = None
+
+    # Display current rate limit status
+    st.markdown("### Rate Limit Status")
+    if st.session_state.request_count > 0:
+        st.write(f"Requests made: {st.session_state.request_count}")
+        if st.session_state.last_request_time:
+            last_request = datetime.fromtimestamp(st.session_state.last_request_time)
+            st.write(f"Last request: {last_request.strftime('%H:%M:%S')}")
+            wait_time = get_wait_time()
+            if wait_time > 0:
+                st.write(f"⏱️ Cooldown: {int(wait_time)}s")
+            else:
+                st.write("✅ Ready")
 
     # File upload section
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
@@ -149,6 +240,9 @@ with st.sidebar:
         if submit_button:
             if not st.session_state.pdf_uploaded:
                 st.error("Please upload the Intervention Grid first before submitting the form.")
+            elif not can_make_request():
+                wait_time = get_wait_time()
+                st.error(f"⏱️ Please wait {int(wait_time)} seconds before submitting (rate limit protection)")
             else:
                 st.session_state.form_submitted = True
                 st.session_state.should_generate_response = True
@@ -162,6 +256,8 @@ with st.sidebar:
         st.session_state.chat_session = None
         st.session_state.pdf_uploaded = False
         st.session_state.uploaded_files = {"tier2": None, "tier3": None}
+        st.session_state.last_request_time = None
+        st.session_state.request_count = 0
         st.success("Chat cleared!")
         st.experimental_rerun()
 
@@ -231,22 +327,20 @@ Form Responses:
                     st.session_state.debug.append(f"Chat initialization error: {str(e)}")
                     st.stop()
 
-            try:
-                # First, send PDFs to establish context
-                if st.session_state.uploaded_files["tier2"]:
-                    st.session_state.chat_session.send_message(st.session_state.uploaded_files["tier2"])
-                if st.session_state.uploaded_files["tier3"]:
-                    st.session_state.chat_session.send_message(st.session_state.uploaded_files["tier3"])
-                    
-                # Then send the actual prompt
-                response = st.session_state.chat_session.send_message(current_message["content"])
+            # Use the new rate-limited API request function
+            response = make_api_request(
+                st.session_state.chat_session, 
+                current_message["content"], 
+                st.session_state.uploaded_files
+            )
+            
+            if response:
                 full_response = response.text
                 message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state.debug.append("Assistant response generated")
-            except Exception as e:
-                st.error(f"An error occurred while generating the response: {str(e)}")
-                st.session_state.debug.append(f"Error: {str(e)}")
+            else:
+                message_placeholder.markdown("❌ Unable to generate response due to rate limiting. Please try again in a few minutes.")
 
         st.session_state.should_generate_response = False
         st.rerun()
@@ -255,52 +349,56 @@ Form Responses:
 user_input = st.chat_input("Type here:")
 
 if user_input:
-    current_message = {"role": "user", "content": user_input}
-    st.session_state.messages.append(current_message)
+    if not can_make_request():
+        wait_time = get_wait_time()
+        st.error(f"⏱️ Please wait {int(wait_time)} seconds before sending another message (rate limit protection)")
+    else:
+        current_message = {"role": "user", "content": user_input}
+        st.session_state.messages.append(current_message)
 
-    with st.chat_message("user"):
-        st.markdown(current_message["content"])
+        with st.chat_message("user"):
+            st.markdown(current_message["content"])
 
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
 
-        if st.session_state.chat_session is None:
-            try:
-                generation_config = {
-                    "temperature": st.session_state.temperature,
-                    "top_p": 0.95,
-                    "top_k": 40,
-                    "max_output_tokens": 4096,
-                }
-                model = genai.GenerativeModel(
-                    model_name=st.session_state.model_name,
-                    generation_config=generation_config,
-                )
-                
-                initial_messages = [
-                    {"role": "user", "parts": [f"System: {system_prompt}"]},
-                    {"role": "model", "parts": ["Understood. I will follow these instructions."]},
-                ]
-                
-                st.session_state.chat_session = model.start_chat(history=initial_messages)
-                st.session_state.debug.append("Chat session initialized successfully")
-            except Exception as e:
-                st.error(f"Error initializing chat session: {str(e)}")
-                st.session_state.debug.append(f"Chat initialization error: {str(e)}")
-                st.stop()
+            if st.session_state.chat_session is None:
+                try:
+                    generation_config = {
+                        "temperature": st.session_state.temperature,
+                        "top_p": 0.95,
+                        "top_k": 40,
+                        "max_output_tokens": 4096,
+                    }
+                    model = genai.GenerativeModel(
+                        model_name=st.session_state.model_name,
+                        generation_config=generation_config,
+                    )
+                    
+                    initial_messages = [
+                        {"role": "user", "parts": [f"System: {system_prompt}"]},
+                        {"role": "model", "parts": ["Understood. I will follow these instructions."]},
+                    ]
+                    
+                    st.session_state.chat_session = model.start_chat(history=initial_messages)
+                    st.session_state.debug.append("Chat session initialized successfully")
+                except Exception as e:
+                    st.error(f"Error initializing chat session: {str(e)}")
+                    st.session_state.debug.append(f"Chat initialization error: {str(e)}")
+                    st.stop()
 
-        try:
-            # Send the user input directly
-            response = st.session_state.chat_session.send_message(user_input)
-            full_response = response.text
-            message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-            st.session_state.debug.append("Assistant response generated")
-        except Exception as e:
-            st.error(f"An error occurred while generating the response: {str(e)}")
-            st.session_state.debug.append(f"Error: {str(e)}")
+            # Use the new rate-limited API request function
+            response = make_api_request(st.session_state.chat_session, user_input)
+            
+            if response:
+                full_response = response.text
+                message_placeholder.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                st.session_state.debug.append("Assistant response generated")
+            else:
+                message_placeholder.markdown("❌ Unable to generate response due to rate limiting. Please try again in a few minutes.")
 
-    st.rerun()
+        st.rerun()
 
 # Debug information
 st.sidebar.title("Debug Info")
