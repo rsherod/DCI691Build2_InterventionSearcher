@@ -2,6 +2,8 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
+import PyPDF2 
+import io 
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -68,39 +70,63 @@ with st.sidebar:
         st.session_state.messages = []
         st.session_state.chat_session = None
    
+    # Define the process_pdf function
+    def process_pdf(uploaded_pdf):
+        try:
+            # Create a PyPDF2 reader object from the uploaded file
+            pdf_bytes = io.BytesIO(uploaded_pdf.read())
+            pdf_reader = PyPDF2.PdfReader(pdf_bytes)
+            
+            # Extract text from all pages
+            pdf_text = ""
+            for page in pdf_reader.pages:
+                pdf_text += page.extract_text()
+            
+            # Reset file pointer for potential reuse
+            pdf_bytes.seek(0)
+            uploaded_pdf.seek(0)
+            
+            return pdf_text, None  # Return None as error if successful
+        except Exception as e:
+            return None, str(e)  # Return the error message if failed
+
     # Improved File upload section
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
     uploaded_pdf = st.file_uploader("Upload:", type=["pdf"])
 
     if uploaded_pdf:
-        try:
-            # Read PDF content using PyPDF2
-            pdf_reader = PyPDF2.PdfReader(uploaded_pdf)
-            pdf_text = ""
-            for page in pdf_reader.pages:
-                pdf_text += page.extract_text()
-            
-            # Store PDF content in session state
-            st.session_state.pdf_content = pdf_text
-            st.session_state.pdf_uploaded = True
-            
-            # Prepare file for Gemini
-            uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
-            st.session_state.uploaded_file = uploaded_file
-            
-            st.success("✅ Intervention Grid uploaded and processed successfully!")
-            
-            # Add debug information
-            st.session_state.debug.append("PDF processed and stored in session state")
-            st.session_state.debug.append(f"PDF length: {len(pdf_text)} characters")
-            
-        except Exception as e:
-            st.error(f"Error processing file: {str(e)}")
-            st.session_state.debug.append(f"File processing error: {str(e)}")
+        pdf_text, error = process_pdf(uploaded_pdf)
+        
+        if error:
+            st.error(f"Error processing file: {error}")
+            st.session_state.debug.append(f"File processing error: {error}")
             # Reset states on error
             st.session_state.pdf_content = ""
             st.session_state.pdf_uploaded = False
             st.session_state.uploaded_file = None
+        else:
+            try:
+                # Store PDF content in session state
+                st.session_state.pdf_content = pdf_text
+                st.session_state.pdf_uploaded = True
+                
+                # Prepare file for Gemini
+                uploaded_pdf.seek(0)  # Reset file pointer
+                st.session_state.uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
+                
+                st.success("✅ Intervention Grid uploaded and processed successfully!")
+                
+                # Add debug information
+                st.session_state.debug.append("PDF processed and stored in session state")
+                st.session_state.debug.append(f"PDF length: {len(pdf_text)} characters")
+                
+            except Exception as e:
+                st.error(f"Error preparing file for Gemini: {str(e)}")
+                st.session_state.debug.append(f"Gemini preparation error: {str(e)}")
+                # Reset states on error
+                st.session_state.pdf_content = ""
+                st.session_state.pdf_uploaded = False
+                st.session_state.uploaded_file = None
     
     # Create a form to capture student background information
     st.markdown("<h1 style='text-align: center;'>Student Information</h1>", unsafe_allow_html=True)
