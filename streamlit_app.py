@@ -17,7 +17,7 @@ if "should_generate_response" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-2.0-pro-exp-02-05"
+    st.session_state.model_name = "gemini-2.0-flash"
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
@@ -28,10 +28,8 @@ if "chat_session" not in st.session_state:
     st.session_state.chat_session = None
 if "pdf_uploaded" not in st.session_state:
     st.session_state.pdf_uploaded = False
-if "uploaded_files" not in st.session_state:
-    st.session_state.uploaded_files = {"tier2": None, "tier3": None}
-if "chat_session" not in st.session_state:
-    st.session_state.chat_session = None
+if "uploaded_file" not in st.session_state:
+    st.session_state.uploaded_file = None
 
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
@@ -59,7 +57,7 @@ with st.sidebar:
     st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
     
     model_option = st.selectbox(
-        "Select Model:", ["gemini-2.0-pro-exp-02-05", "gemini-2.0-flash"]
+        "Select Model:", ["gemini-2.0-flash", "gemini-2.0-pro-exp-02-05"]
     )
     
     if model_option != st.session_state.model_name:
@@ -67,40 +65,21 @@ with st.sidebar:
         st.session_state.messages = []
         st.session_state.chat_session = None
 
-    # File upload section
+    # File upload section - ONLY ONE UPLOAD
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
-    st.subheader("Upload Your Intervention Documents")
-    st.caption("Note: If your school has separate documents for Tier 2 and Tier 3 interventions, you can upload both. If you have a single combined document, you can upload it to either field.")
     
-    tier2_pdf = st.file_uploader("Upload Tier 2 (Secondary) Interventions:", type=["pdf"])
-    tier3_pdf = st.file_uploader("Upload Tier 3 (Tertiary) Interventions:", type=["pdf"])
+    uploaded_pdf = st.file_uploader("Upload Tier 2 or Tier 3 Intervention Grid:", type=["pdf"])
 
-    upload_success = False
-    
-    # Process Tier 2 document
-    if tier2_pdf:
+    if uploaded_pdf:
         try:
-            tier2_file = genai.upload_file(tier2_pdf, mime_type="application/pdf")
-            st.session_state.uploaded_files["tier2"] = tier2_file
-            upload_success = True
+            uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
+            st.session_state.uploaded_file = uploaded_file
+            st.session_state.pdf_uploaded = True
+            st.success("✅ Intervention Grid uploaded successfully!")
+            st.session_state.debug.append("PDF uploaded and stored in session state")
         except Exception as e:
-            st.error(f"Error uploading Tier 2 document: {str(e)}")
-            st.session_state.debug.append(f"Tier 2 upload error: {str(e)}")
-
-    # Process Tier 3 document
-    if tier3_pdf:
-        try:
-            tier3_file = genai.upload_file(tier3_pdf, mime_type="application/pdf")
-            st.session_state.uploaded_files["tier3"] = tier3_file
-            upload_success = True
-        except Exception as e:
-            st.error(f"Error uploading Tier 3 document: {str(e)}")
-            st.session_state.debug.append(f"Tier 3 upload error: {str(e)}")
-
-    if upload_success:
-        st.session_state.pdf_uploaded = True
-        st.success("✅ Intervention Grid(s) uploaded successfully!")
-        st.session_state.debug.append("PDF(s) uploaded and stored in session state")
+            st.error(f"Error uploading document: {str(e)}")
+            st.session_state.debug.append(f"Upload error: {str(e)}")
     
     # Student Information Form
     st.markdown("<h1 style='text-align: center;'>Student Information</h1>", unsafe_allow_html=True)
@@ -161,7 +140,7 @@ with st.sidebar:
         st.session_state.debug = []
         st.session_state.chat_session = None
         st.session_state.pdf_uploaded = False
-        st.session_state.uploaded_files = {"tier2": None, "tier3": None}
+        st.session_state.uploaded_file = None
         st.success("Chat cleared!")
         st.experimental_rerun()
 
