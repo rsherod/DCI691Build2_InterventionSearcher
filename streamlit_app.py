@@ -232,12 +232,10 @@ Form Responses:
                     st.stop()
 
             try:
-                # Combine PDFs and prompt into a single message to reduce API calls
+                # Combine PDF and prompt into a single message to reduce API calls
                 parts = []
-                if st.session_state.uploaded_files["tier2"]:
-                    parts.append(st.session_state.uploaded_files["tier2"])
-                if st.session_state.uploaded_files["tier3"]:
-                    parts.append(st.session_state.uploaded_files["tier3"])
+                if st.session_state.uploaded_file:
+                    parts.append(st.session_state.uploaded_file)
                 parts.append(current_message["content"])
                 
                 # Send everything in one API call
