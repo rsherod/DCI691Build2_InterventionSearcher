@@ -63,7 +63,7 @@ Each intervention grid document consists of 5 columns:
 a) For general questions, greetings, and requests for help: Engage conversationally using information from the Background Information section to inform responses. When answering questions not directly addressed by the Background Information or intervention grids, clearly state that the response is speculative.
 
 2. Response Types:
-b) For submitted student data ONLY: Output exactly two tables in this markdown format:
+b) For submitted student data ONLY: Output exactly two tables in this markdown format and include this sentence - "based on the information you have provided, you might consider taking a closer look at these interventions from your intervention grid:":
 
 # Tier 2 Interventions
 | Intervention | Description |
