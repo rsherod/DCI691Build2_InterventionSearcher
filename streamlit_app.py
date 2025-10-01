@@ -58,7 +58,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 # -------- Preload a SAMPLE Tier 2 PDF so it's "already uploaded" --------
 # Place your sample file at this path (or change it here)
-SAMPLE_TIER2_PATH = "sample_tier2.pdf"
+SAMPLE_TIER2_PATH = "sample_tier2.json"
 try:
     if not st.session_state.sample_tier2_loaded:
         with open(SAMPLE_TIER2_PATH, "rb") as _f:
@@ -70,7 +70,7 @@ try:
             st.session_state.sample_tier2_name = SAMPLE_TIER2_PATH
             st.session_state.debug.append("Sample Tier 2 PDF preloaded and stored in session state")
 except FileNotFoundError:
-    st.warning("Sample Tier 2 PDF not found. Add a file named 'sample_tier2.pdf' to preload it.")
+    st.warning("Sample Tier 2 PDF not found. Add a file named 'sample_tier2.json' to preload it.")
 except Exception as e:
     st.error(f"Error preloading sample Tier 2 PDF: {e}")
     st.session_state.debug.append(f"Sample preload error: {e}")
