@@ -6,6 +6,8 @@ import io
 from io import BytesIO
 import json
 import os
+import uuid
+import datetime
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -37,6 +39,86 @@ if "sample_tier2_loaded" not in st.session_state:
     st.session_state.sample_tier2_loaded = False
 if "sample_tier2_name" not in st.session_state:
     st.session_state.sample_tier2_name = ""
+
+if "session_id" not in st.session_state:
+    # One ID per chat session—this will be the Firestore doc id
+    st.session_state.session_id = str(uuid.uuid4())
+if "firestore_inited" not in st.session_state:
+    st.session_state.firestore_inited = False
+if "firestore_doc_ref" not in st.session_state:
+    st.session_state.firestore_doc_ref = None
+
+##############################
+# Firestore (Firebase) setup #
+##############################
+# This will NOT change bot behavior; it just enables saving.
+try:
+    # Lazy import so it’s easy to remove if needed
+    import firebase_admin
+    from firebase_admin import credentials, firestore as fb_firestore
+
+    if not st.session_state.firestore_inited:
+        # Prefer a service account passed via Streamlit secrets.
+        # Add your JSON under: st.secrets["FIREBASE_SERVICE_ACCOUNT"]
+        # Minimal keys used: project_id, client_email, private_key
+        if "FIREBASE_SERVICE_ACCOUNT" in st.secrets:
+            sa_info = dict(st.secrets["FIREBASE_SERVICE_ACCOUNT"])
+            # Fix escaped newlines in private_key if necessary
+            if "private_key" in sa_info and "\\n" in sa_info["private_key"]:
+                sa_info["private_key"] = sa_info["private_key"].replace("\\n", "\n")
+            cred = credentials.Certificate(sa_info)
+            if not firebase_admin._apps:
+                firebase_admin.initialize_app(cred)
+        else:
+            # Fall back to Application Default Credentials (e.g., if deployed on GCP)
+            if not firebase_admin._apps:
+                firebase_admin.initialize_app()
+
+        db = fb_firestore.client()
+        # Collection name: "chat_sessions" (change if you like)
+        st.session_state.firestore_doc_ref = db.collection("chat_sessions").document(st.session_state.session_id)
+        st.session_state.firestore_inited = True
+except Exception as _firebase_e:
+    # If Firebase isn’t configured, we silently skip—bot still runs.
+    st.session_state.firestore_inited = False
+    st.session_state.firestore_doc_ref = None
+
+def _messages_to_transcript(messages: list) -> str:
+    """
+    Convert entire conversation into a single-line-friendly string.
+    Keeps everything in one Firestore document field.
+    """
+    # Timestamp header (ISO 8601, local time not required)
+    ts = datetime.datetime.utcnow().isoformat() + "Z"
+    lines = [f"[transcript_saved_at_utc={ts}]"]
+    for m in messages:
+        role = m.get("role", "unknown")
+        # Ensure we only store text content
+        content = str(m.get("content", "")).replace("\r", " ").replace("\n", " ").strip()
+        lines.append(f"{role}: {content}")
+    # Join with a single space to keep it “one line”; Firestore stores it as a single string field
+    return " ".join(lines)
+
+def save_chat_to_firestore():
+    """
+    Writes the entire chat to a single Firestore document (one row).
+    Safe no-op if Firestore isn’t configured.
+    """
+    try:
+        if not st.session_state.firestore_doc_ref:
+            return
+        payload = {
+            "session_id": st.session_state.session_id,
+            "model_name": st.session_state.get("model_name", None),
+            "transcript": _messages_to_transcript(st.session_state.get("messages", [])),
+            "message_count": len(st.session_state.get("messages", [])),
+            "saved_at_utc": datetime.datetime.utcnow()
+        }
+        # set() creates or overwrites the single document for this session id
+        st.session_state.firestore_doc_ref.set(payload)
+    except Exception as _save_e:
+        # Don’t surface any Firestore issues to users
+        pass
 
 # Center the entire main content area on large screens and give it a comfy max width
 st.markdown("""
@@ -255,6 +337,8 @@ Form Responses:
                 message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state.debug.append("Assistant response generated")
+            # Save the entire conversation snapshot to Firestore (one doc/line per session)
+            save_chat_to_firestore()                
             except Exception as e:
                 st.error(f"An error occurred while generating the response: {str(e)}")
                 st.session_state.debug.append(f"Error: {str(e)}")
@@ -311,6 +395,8 @@ if user_input:
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.session_state.debug.append("Assistant response generated")
+                # Save the entire conversation snapshot to Firestore (one doc/line per session)
+                save_chat_to_firestore()            
         except Exception as e:
             st.error(f"An error occurred while generating the response: {str(e)}")
             st.session_state.debug.append(f"Error: {str(e)}")
