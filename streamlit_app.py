@@ -2,7 +2,8 @@
 import streamlit as st
 import google.generativeai as genai
 from PIL import Image
-import io 
+import io
+from io import BytesIO
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -30,6 +31,10 @@ if "pdf_uploaded" not in st.session_state:
     st.session_state.pdf_uploaded = False
 if "uploaded_file" not in st.session_state:
     st.session_state.uploaded_file = None
+if "sample_tier2_loaded" not in st.session_state:
+    st.session_state.sample_tier2_loaded = False
+if "sample_tier2_name" not in st.session_state:
+    st.session_state.sample_tier2_name = ""
 
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
@@ -51,6 +56,25 @@ st.caption("Note: This Bot can make mistakes. Make sure you refer back to the in
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
+# -------- Preload a SAMPLE Tier 2 PDF so it's "already uploaded" --------
+# Place your sample file at this path (or change it here)
+SAMPLE_TIER2_PATH = "sample_tier2.pdf"
+try:
+    if not st.session_state.sample_tier2_loaded:
+        with open(SAMPLE_TIER2_PATH, "rb") as _f:
+            # Upload once and reuse in session state
+            uploaded_file = genai.upload_file(_f, mime_type="application/pdf")
+            st.session_state.uploaded_file = uploaded_file
+            st.session_state.pdf_uploaded = True
+            st.session_state.sample_tier2_loaded = True
+            st.session_state.sample_tier2_name = SAMPLE_TIER2_PATH
+            st.session_state.debug.append("Sample Tier 2 PDF preloaded and stored in session state")
+except FileNotFoundError:
+    st.warning("Sample Tier 2 PDF not found. Add a file named 'sample_tier2.pdf' to preload it.")
+except Exception as e:
+    st.error(f"Error preloading sample Tier 2 PDF: {e}")
+    st.session_state.debug.append(f"Sample preload error: {e}")
+
 # Sidebar for model and temperature selection
 with st.sidebar:
     st.markdown("<h1 style='text-align: center;'>Settings</h1>", unsafe_allow_html=True)
@@ -65,21 +89,20 @@ with st.sidebar:
         st.session_state.messages = []
         st.session_state.chat_session = None
 
-    # File upload section - ONLY ONE UPLOAD
-    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
-    
-    uploaded_pdf = st.file_uploader("Upload Tier 2 or Tier 3 Intervention Grid:", type=["pdf"])
+    # File upload section - show Tier 2 and Tier 3 slots, but DISABLED
+    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grids</h1>", unsafe_allow_html=True)
 
-    if uploaded_pdf:
-        try:
-            uploaded_file = genai.upload_file(uploaded_pdf, mime_type="application/pdf")
-            st.session_state.uploaded_file = uploaded_file
-            st.session_state.pdf_uploaded = True
-            st.success("✅ Intervention Grid uploaded successfully!")
-            st.session_state.debug.append("PDF uploaded and stored in session state")
-        except Exception as e:
-            st.error(f"Error uploading document: {str(e)}")
-            st.session_state.debug.append(f"Upload error: {str(e)}")
+    st.subheader("Tier 2 Intervention Grid (Sample Loaded)")
+    st.caption("A sample Tier 2 grid is already loaded for you. Uploads are disabled.")
+    st.file_uploader("Tier 2 Intervention Grid (disabled)", type=["pdf"], disabled=True, key="tier2_disabled_slot")
+    if st.session_state.sample_tier2_loaded and st.session_state.sample_tier2_name:
+        st.success(f"✅ Loaded: {st.session_state.sample_tier2_name}")
+    else:
+        st.info("No sample detected.")
+
+    st.subheader("Tier 3 Intervention Grid (Optional)")
+    st.caption("Uploads are disabled in this version.")
+    st.file_uploader("Tier 3 Intervention Grid (disabled)", type=["pdf"], disabled=True, key="tier3_disabled_slot")
     
     # Student Information Form
     st.markdown("<h1 style='text-align: center;'>Student Information</h1>", unsafe_allow_html=True)
