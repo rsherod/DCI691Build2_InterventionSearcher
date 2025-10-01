@@ -38,6 +38,13 @@ if "sample_tier2_loaded" not in st.session_state:
 if "sample_tier2_name" not in st.session_state:
     st.session_state.sample_tier2_name = ""
 
+# Center all Streamlit images (including the header)
+st.markdown("""
+    <style>
+        .stImage img { display: block; margin-left: auto; margin-right: auto; }
+    </style>
+""", unsafe_allow_html=True)
+
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
