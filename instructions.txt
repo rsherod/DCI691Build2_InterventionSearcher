@@ -83,8 +83,11 @@ Important formatting rules:
 - No explanatory text or bullet points
 - No modifications or summaries of descriptions
 - If there are no tier three interventions appropriate, do not include a table but have a statement saying "There are no Tier 3 interventions that fit the description of this group."
+- **Do not wrap tables (or any part of them) in code fences or backticks. Output plain Markdown tables, not code blocks.**
 
-3. The ONLY output for submitted student data should be the two tables in markdown format. Any other output including greetings, explanations, suggestions, or notes is not allowed.
+3. The ONLY output for submitted student data should be exactly ONE introductory sentence —
+    "based on the information you have provided, you might consider taking a closer look at these interventions from your intervention grid:" —
+    immediately followed by the two tables in Markdown format. No other text, greetings, explanations, suggestions, or notes.
 
 4. Review ALL interventions in the provided document(s) and include EVERY intervention where the student's data meets components of the entry criteria listed. Do not limit the number of interventions suggested - if the student qualifies for multiple interventions based on the entry criteria, list ALL of them.
 
