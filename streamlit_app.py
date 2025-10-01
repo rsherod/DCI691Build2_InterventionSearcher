@@ -293,16 +293,21 @@ with st.sidebar:
         st.session_state.chat_session = None
         st.session_state.pdf_uploaded = False
         st.session_state.uploaded_file = None
+        # Reset Student Information form so users must reselect options
+        for k in ["Academic_read", "Academic_math", "SRSS_I", "SRSS_E", "Days_missed", "ODRs"]:
+            st.session_state.pop(k, None)           # removes the widget value so it defaults to first option
+        st.session_state.form_responses = {}        # clear stored form responses
+        st.session_state.form_submitted = False
+        st.session_state.should_generate_response = False
+
         # OPTIONAL: start a brand-new Firestore document for the next chat
         st.session_state.session_id = str(uuid.uuid4())
         try:
-            # Re-point the doc ref to the new session id
             st.session_state.firestore_doc_ref = fb_firestore.client()\
                 .collection("chat_sessions")\
                 .document(st.session_state.session_id)
         except Exception:
-            # If Firestore isn't configured, silently continue
-            pass        
+            pass
         st.success("Chat cleared!")
         st.rerun()
 
