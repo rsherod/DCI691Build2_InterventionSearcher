@@ -92,8 +92,8 @@ with st.sidebar:
     # File upload section - show Tier 2 and Tier 3 slots, but DISABLED
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
 
-    st.subheader("Tier 2 Intervention Grid (Sample Loaded)")
-    st.caption("A sample Tier 2 grid is already loaded for you. Uploads are disabled.")
+    st.subheader("Tier 2 or Tier 3 Intervention Grid")
+    st.caption("A sample Tier 2 grid is already loaded for you.")
     st.file_uploader("Tier 2 Intervention Grid (disabled)", type=["pdf"], disabled=True, key="tier2_disabled_slot")
     if st.session_state.sample_tier2_loaded and st.session_state.sample_tier2_name:
         st.success(f"✅ Loaded: {st.session_state.sample_tier2_name}")
