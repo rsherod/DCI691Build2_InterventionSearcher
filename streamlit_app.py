@@ -255,7 +255,7 @@ with st.sidebar:
         st.session_state.pdf_uploaded = False
         st.session_state.uploaded_file = None
         st.success("Chat cleared!")
-        st.experimental_rerun()
+        st.rerun()
 
 # Load system prompt
 def load_text_file(file_path):
