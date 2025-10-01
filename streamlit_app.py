@@ -38,22 +38,32 @@ if "sample_tier2_loaded" not in st.session_state:
 if "sample_tier2_name" not in st.session_state:
     st.session_state.sample_tier2_name = ""
 
-# Center all Streamlit images (including the header)
-st.markdown("""
+# Center the header image on all screen sizes
+st.markdown(
+    """
     <style>
-        .stImage img { display: block; margin-left: auto; margin-right: auto; }
+      /* Flex wrapper to force true centering even on ultra-wide monitors */
+      #header-img {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      #header-img img { display: block; }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
-    col1, col2, col3 = st.columns([1,6,1])
-    with col2:
-        st.image(image, width=800)  # centered via CSS above
-        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
-        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
+    # Wrap the image in a flex container that stays centered at any width
+    st.markdown('<div id="header-img">', unsafe_allow_html=True)
+    st.image(image, width=800)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
