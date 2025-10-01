@@ -66,7 +66,7 @@ except Exception as e:
 # Title and BotDescription 
 st.subheader("Welcome to the Intervention Grid Searcher!")
 st.write("The goal of this bot is to help you find Tier 2 and Tier 3 Interventions from the intervention grids at your school. \n\nDirections: Use the panel on the left to upload the Tier 2 and/or Tier 3 Intervention Grid from your school. Then, select options from the drop-down menu that best describe the student or group of students you are interested in selecting an intervention for. When you are ready, hit 'Submit Responses' and the bot will provide a table with the name and description of the interventions from your intervention grid that might be a good fit.")
-st.caption("Note: This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or students.")
+st.caption("Note: This bot is not designed to receive any identifiable information. This Bot can make mistakes. Make sure you refer back to the intervention grid to determine if it is a good fit for the student or students.")
 
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
