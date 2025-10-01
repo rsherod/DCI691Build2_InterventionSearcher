@@ -305,6 +305,6 @@ if user_input:
     st.rerun()
 
 # Debug information
-st.sidebar.title("Debug Info")
-for debug_msg in st.session_state.debug:
-    st.sidebar.text(debug_msg)
+#st.sidebar.title("Debug Info")
+#for debug_msg in st.session_state.debug:
+#    st.sidebar.text(debug_msg)
