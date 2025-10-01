@@ -90,7 +90,7 @@ with st.sidebar:
         st.session_state.chat_session = None
 
     # File upload section - show Tier 2 and Tier 3 slots, but DISABLED
-    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grids</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
 
     st.subheader("Tier 2 Intervention Grid (Sample Loaded)")
     st.caption("A sample Tier 2 grid is already loaded for you. Uploads are disabled.")
@@ -100,9 +100,6 @@ with st.sidebar:
     else:
         st.info("No sample detected.")
 
-    st.subheader("Tier 3 Intervention Grid (Optional)")
-    st.caption("Uploads are disabled in this version.")
-    st.file_uploader("Tier 3 Intervention Grid (disabled)", type=["pdf"], disabled=True, key="tier3_disabled_slot")
     
     # Student Information Form
     st.markdown("<h1 style='text-align: center;'>Student Information</h1>", unsafe_allow_html=True)
