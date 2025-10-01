@@ -337,8 +337,8 @@ Form Responses:
                 message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
                 st.session_state.debug.append("Assistant response generated")
-            # Save the entire conversation snapshot to Firestore (one doc/line per session)
-            save_chat_to_firestore()                
+                # Save the entire conversation snapshot to Firestore (keep this INSIDE the try)
+                save_chat_to_firestore()                
             except Exception as e:
                 st.error(f"An error occurred while generating the response: {str(e)}")
                 st.session_state.debug.append(f"Error: {str(e)}")
@@ -395,8 +395,8 @@ if user_input:
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.session_state.debug.append("Assistant response generated")
-                # Save the entire conversation snapshot to Firestore (one doc/line per session)
-                save_chat_to_firestore()            
+            # Save the entire conversation snapshot to Firestore (keep this INSIDE the try)
+            save_chat_to_firestore()            
         except Exception as e:
             st.error(f"An error occurred while generating the response: {str(e)}")
             st.session_state.debug.append(f"Error: {str(e)}")
