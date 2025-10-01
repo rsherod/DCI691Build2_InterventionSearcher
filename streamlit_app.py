@@ -99,6 +99,42 @@ def _messages_to_transcript(messages: list) -> str:
     # Join with a single space to keep it “one line”; Firestore stores it as a single string field
     return " ".join(lines)
 
+def _messages_to_turns(messages: list) -> list:
+    """
+    Flat list of turns so Firestore shows one element per message.
+    Example: [{i, role, content}, ...]
+    """
+    turns = []
+    for i, m in enumerate(messages, start=1):
+        turns.append({
+            "i": i,
+            "role": m.get("role", "unknown"),
+            "content": str(m.get("content", "")),
+        })
+    return turns
+
+def _messages_to_exchanges(messages: list) -> list:
+    """
+    Group messages into user→assistant pairs for easier reading.
+    Example: [{"user": "...", "assistant": "..."}, ...]
+    """
+    exchanges = []
+    current = None
+    for m in messages:
+        role = m.get("role", "")
+        text = str(m.get("content", ""))
+        if role == "user":
+            current = {"user": text, "assistant": None}
+            exchanges.append(current)
+        elif role == "assistant":
+            if current and current.get("assistant") is None:
+                current["assistant"] = text
+            else:
+                exchanges.append({"user": None, "assistant": text})
+        else:
+            exchanges.append({"user": None, "assistant": None})
+    return exchanges
+
 def save_chat_to_firestore():
     """
     Writes the entire chat to a single Firestore document (one row).
@@ -111,6 +147,9 @@ def save_chat_to_firestore():
             "session_id": st.session_state.session_id,
             "model_name": st.session_state.get("model_name", None),
             "transcript": _messages_to_transcript(st.session_state.get("messages", [])),
+            # NEW: structured fields for readable, line-by-line viewing
+            "turns": _messages_to_turns(st.session_state.get("messages", [])),
+            "exchanges": _messages_to_exchanges(st.session_state.get("messages", [])),            
             "message_count": len(st.session_state.get("messages", [])),
             "saved_at_utc": datetime.datetime.utcnow()
         }
@@ -254,6 +293,16 @@ with st.sidebar:
         st.session_state.chat_session = None
         st.session_state.pdf_uploaded = False
         st.session_state.uploaded_file = None
+        # OPTIONAL: start a brand-new Firestore document for the next chat
+        st.session_state.session_id = str(uuid.uuid4())
+        try:
+            # Re-point the doc ref to the new session id
+            st.session_state.firestore_doc_ref = fb_firestore.client()\
+                .collection("chat_sessions")\
+                .document(st.session_state.session_id)
+        except Exception:
+            # If Firestore isn't configured, silently continue
+            pass        
         st.success("Chat cleared!")
         st.rerun()
 
