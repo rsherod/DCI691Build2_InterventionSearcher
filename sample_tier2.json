@@ -1,0 +1,383 @@
+{
+  "document_title": "Secondary (Tier 2) Intervention Grid",
+  "source": "Ci3T Blueprint E",
+  "reference": "Lane, Kalberg, and Menzies (2009)",
+  "interventions": [
+    {
+      "support_name": "Set a Goal, Select a Strategy, Record Progress (Set, Select, Record)",
+      "reading_strategy": "Repeated Readings (fluency)",
+      "description": "Small group intervention with individual leveled reading passage practice.\n\nStudent practices reading passages with accuracy, rate and expression.\n\nStudent sets a reading fluency goal and engagement goal, self-graphs fluency progress toward goal (Student Practice Graph), and self-evaluates their engagement in instructional activities (Set, Select, Record Student Self-monitoring Form).\n\n30 min, 5 days per week with a trained interventionist (e.g., teacher, paraprofessional, reading specialist). In addition to Tier 1 reading instruction.\n\n(See SSR Planning Form)",
+      "entry_criteria": {
+        "academic": [
+          "Acadience® Reading CBM: below or well-below benchmark"
+        ],
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8)",
+          "SRSS-I5 score: Moderate (2-3)"
+        ],
+        "logic": "Academic AND Behavior"
+      },
+      "progress_monitoring": {
+        "targeted_skill": "Targeted reading skill – CBM progress monitoring probes and achievement of daily fluency reading goals",
+        "engagement": "Engagement in small group reading instruction\n(Tools: Set, Select, Record Student Self-monitoring Form; Set, Select, Record Data Tracker)",
+        "social_validity": [
+          "Set, Select, Record - Student",
+          "Set, Select, Record - Teacher",
+          "Set, Select, Record - Family"
+        ],
+        "treatment_integrity": "Set, Select, Record Treatment integrity checklist"
+      },
+      "exit_criteria": {
+        "academic": "Reading CBM: 3 data points on or above the aim line for meeting end of year benchmark.",
+        "behavior": [
+          "SRSS-E7 score: Low (0-3)",
+          "SRSS-I5 score: Low (0-1)"
+        ]
+      }
+    },
+    {
+      "support_name": "Direct Behavior Rating (DBR)",
+      "description": "DBR intervention offers flexibility to design the instrument and procedures to fit the need and context. For example, core behavioral competencies such as academically engaged or disruptive behaviors could be appropriate targets, or targets could be mapped to schoolwide behavior expectations. The DBR scale includes a range from 0-10, with descriptors or pictures added to assist the rater. DBR procedures involve rating target behaviors following specified observation period(s) (e.g., math intervention; ELA core instruction). Typically, the teacher serves as the rater, although multiple informants including the student could be added. After each observation period, the rater uses the DBR form to indicate the degree to which the student displayed each behavior. When used as part of a Tier 2 intervention, the rater reminds the students of the expected behaviors prior beginning the observation. The rater meets briefly with the student to share the DBR rating, providing behavior specific praise and instructional feedback. Additional components involving family-school communication can be added as appropriate (e.g., daily ratings shared with caregiver, request for return acknowledgement or possible consequences).",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8) and/or",
+          "SRSS-I5 score: Moderate (2-3)",
+          "AND",
+          "Evidence of teacher implementation of Ci3T primary (Tier 1) plan [treatment integrity: direct observation]",
+          "AND",
+          "Parent permission, in accordance with district policy"
+        ],
+        "logic": "Behavior (first two items with and/or relationship) AND Evidence of teacher implementation AND Parent permission"
+      },
+      "progress_monitoring": {
+        "student_measures": [
+          "Direct Behavior Rating (DBR; daily)"
+        ],
+        "social_validity": [
+          "Teacher: IRP-15",
+          "Student: DBR Student Social Validity form/interview"
+        ],
+        "treatment_integrity": "DBR treatment integrity measure"
+      },
+      "exit_criteria": {
+        "goals": "Student goals met for 10-12 weeks (team review of progress to determine)",
+        "behavior": "SRSS-E7 and I5 scores are in the low risk category"
+      }
+    },
+    {
+      "support_name": "Behavior Contract",
+      "description": "A written agreement between two parties used to specify the contingent relationship between the completion of a behavior and access to - or delivery of - a specific reward. The target behavior can be an academic (e.g., work completion, rate of oral reading fluency), behavioral (e.g., on task), or social (e.g., participate in a group). Contract may involve administrator, teacher, family member, and student.",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8)",
+          "SRSS-I5 score: Moderate (2-3)",
+          "OR",
+          "2 or more office discipline referrals (ODR)",
+          "OR",
+          "2 or more absences per quarter"
+        ],
+        "academic": [
+          "Progress report: 1 or more course failures",
+          "OR",
+          "Progress report: 2 or more missing assignments",
+          "OR",
+          "Progress report: Targeted for Growth for academic learning behaviors",
+          "OR",
+          "AIMSweb: intensive or strategic level (math or reading)"
+        ],
+        "logic": "Behavior (any of the OR conditions) AND/OR Academic (any of the OR conditions)"
+      },
+      "progress_monitoring": {
+        "target_behavior": "Target behavior defined in the behavior contract (e.g., % of assignments completed, rate of oral reading fluency)",
+        "grades": "Passing grades on progress reports",
+        "social_validity": [
+          "Teacher: Intervention Rating Profile (IRP-15)",
+          "Student: Children's Intervention Rating Profile (CIRP)"
+        ],
+        "treatment_integrity": "Implementation checklist & treatment integrity checklist"
+      },
+      "exit_criteria": {
+        "contract_completion": "Successful completion of Behavior contract",
+        "behavior": [
+          "SRSS-E7 score: Low (0-3)",
+          "SRSS-I5 score: Low (0-1)"
+        ],
+        "academic": "Passing grade on progress report or report card in the academic area of concern (or target behavior named in the behavior contract)"
+      }
+    },
+    {
+      "support_name": "Self-Regulated Strategy Development (SRSD) for Writing",
+      "description": "Students engage in small group intervention focusing on writing. Students learn a general a planning and organizing strategy as well as specific genre writing strategies (e.g., story writing, persuasive writing) using the six-stage Self-Regulated Strategies Development approach to help students plan, write, and revise their writing. Students participating in this intervention meet 3-4 days/week for 30-min lessons over 3–6-week period (10-15 lessons) in addition to Tier 1 writing and English and Language Arts (ELA) instruction.",
+      "entry_criteria": {
+        "academic": [
+          "Writing formative assessment, district assessment, or curriculum-based measure (CBM): below expected benchmark",
+          "OR",
+          "Grades: Two or more missing writing assignments within a grading period across all content areas",
+          "OR",
+          "AIMSweb: intensive or strategic level (math or reading)"
+        ],
+        "logic": "One or more of the academic criteria"
+      },
+      "progress_monitoring": {
+        "academic_measures": "Weekly writing probes scored on measure of interest: holistic quality, total words written, number of writing genre elements, and/or correct word sequences (if using a CBM).",
+        "work_completion": "Work completion of writing assignments",
+        "treatment_integrity": [
+          "Implementation checklist",
+          "Treatment integrity checklist"
+        ],
+        "social_validity": [
+          "Intervention Rating Profile-15 (IRP-15; teacher and or family)",
+          "Children's Intervention Rating Profile (CIRP)"
+        ]
+      },
+      "exit_criteria": {
+        "completion": "Completion of SRSD for writing intervention lessons (all 6 stages)",
+        "goals": [
+          "Writing goals met for increased scores on measure of interest: holistic quality, number of words written, writing elements, and/or correct writing sequence (if using a CBM)",
+          "OR",
+          "Passing grade on progress report or report card in writing or content area with missing assignments previously",
+          "OR",
+          "No missing writing assignments in a grading period",
+          "AND/OR",
+          "Scoring at or above district benchmark criteria"
+        ]
+      }
+    },
+    {
+      "support_name": "Social Skills Intervention",
+      "description": "Interventionist (trained teacher, counselor, or paraprofessional) will lead small group social skills intervention sessions for approximately 25-30 min 3-4 days per week. Students will acquire new skills, learn how to engage more fully in instructional experiences, and learn how to meet more school-wide expectations. Small groups will run for up to 24 sessions (8 to 12 weeks depending on the number of sessions conducted per week) using approved, validated social skills lessons appropriate for student skillsets as identified using validated assessments (e.g., teacher and parent versions of the SSiS-Rating Scale).",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8) and/or",
+          "SRSS-I5 score: Moderate (2-3)",
+          "AND",
+          "2 or fewer absences in first 3 months of school",
+          "AND",
+          "Evidence of teacher implementation of Ci3T primary (Tier 1) plan",
+          "AND",
+          "Family permission",
+          "AND",
+          "After obtaining family permission, complete a validated assessment (e.g., Social Skills Improvement System-Rating Scales Teacher, Parent, and Student [if age ≥ 8] forms) to identify strengths, performance deficits, and acquisition deficits."
+        ],
+        "logic": "Behavior (first two items with and/or relationship) AND Attendance AND Evidence of teacher implementation AND Family permission AND Assessment"
+      },
+      "progress_monitoring": {
+        "student_measures": [
+          "SSiS-Rating Scale (Pre/Post)",
+          "Direct Behavior Rating (DBR; daily)",
+          "Attendance and tardies"
+        ],
+        "social_validity": [
+          "Teacher: IRP-15",
+          "Student: CIRP"
+        ],
+        "treatment_integrity": "Social Skill Lesson Treatment Integrity Checklist"
+      },
+      "exit_criteria": {
+        "review": "Review student progress at end of 24 sessions",
+        "behavior": "SRSS-E7 and I5 scores are in the low-risk category",
+        "team_decision": "Team agrees goals have been met or no further sessions are warranted"
+      }
+    },
+    {
+      "support_name": "Self-monitoring",
+      "description": "Students learn to observe and record their own behavior. Self-monitoring is implemented by the student and teacher to improve academic performance (completion and/or accuracy), academic enabling behaviors (e.g., engagement, study skills), social skills, or other target behaviors.",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8)",
+          "SRSS-I5 score: Moderate (2-3)",
+          "OR",
+          "SRSS-E7 score: High (9-21)",
+          "SRSS-I5 score: High (4-15)",
+          "OR",
+          "2 or more office discipline referrals (ODR)"
+        ],
+        "academic": [
+          "Progress report: 1 or more course failures",
+          "OR",
+          "AIMSweb: intensive or strategic level (math or reading)",
+          "OR",
+          "Progress report: Targeted for growth in academic enabling behaviors"
+        ],
+        "logic": "Behavior (any of the OR conditions) AND/OR Academic (any of the OR conditions)"
+      },
+      "progress_monitoring": {
+        "work_completion": "Work completion and accuracy of the academic, behavioral, or social and emotional area of concern named in the self-monitoring plan",
+        "grades": "Passing grades on progress reports",
+        "social_validity": [
+          "Intervention Rating Profile-15 (IRP-15; teacher and family)",
+          "Children's Intervention Rating Profile (CIRP)"
+        ],
+        "treatment_integrity": "Implementation & treatment integrity checklist"
+      },
+      "exit_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Low (0-3)",
+          "SRSS-I5 score: Low (0-1)"
+        ],
+        "academic": "Passing grade on progress report or report card in the academic area of concern (or target behavior named in the self-monitoring plan)"
+      }
+    },
+    {
+      "support_name": "Check-In/Check-Out (CICO)",
+      "description": "CICO is implemented by the student, an adult mentor, and a classroom teacher. Participating students check in and out with a mentor each day on targeted goals. During check- in, students receive a daily progress report that they take to each class for feedback on their progress meeting the school-wide expectations. Families receive school communication daily on the student's performance and goal progress monitoring.",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Moderate (4-8)",
+          "SRSS-I5 score: Moderate (2-3)",
+          "OR",
+          "SRSS-E7 score: High (9-21)",
+          "SRSS-I5 score: High (4-15)",
+          "OR",
+          "2 or more office discipline referrals (ODR)"
+        ],
+        "academic": [
+          "Progress report: 1 or more course failures",
+          "OR",
+          "AIMSweb: intensive or strategic level (math or reading)",
+          "OR",
+          "Progress report: Targeted for growth in academic enabling behaviors"
+        ],
+        "logic": "Behavior (any of the OR conditions) AND/OR Academic (any of the OR conditions)"
+      },
+      "progress_monitoring": {
+        "daily_goals": "Progress towards daily targeted behavior goal attainment as measured by the daily behavior report.",
+        "social_validity": [
+          "Intervention Rating Profile-15 (IRP-15; teacher and family)",
+          "Children's Intervention Rating Profile (CIRP)"
+        ],
+        "treatment_integrity": "Implementation & treatment integrity checklist"
+      },
+      "exit_criteria": {
+        "behavior": [
+          "SRSS-E7 score: Low (0-3)",
+          "SRSS-I5 score: Low (0-1)"
+        ],
+        "academic": "Passing grade on progress report or report card in the academic area of concern (or target behavior named in the daily behavior report)"
+      }
+    },
+    {
+      "support_name": "Behavior specific praise",
+      "description": "Behavior specific praise (BSP) refers to sincere praise statements that acknowledge the student and reference the specific, desirable behavior being recognized, praising effort (not ability). BSP is most effective when consistently delivered immediately after desired behavior has been performed.\n\nExample: \"Suzi, great job showing your work on all the division steps.\" Non-example: \"Good job!\"",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7: Moderate (4-8)",
+          "SRSS-I5: Moderate (2-3)",
+          "SRSS-E7: High (9-21)",
+          "SRSS-I5: High (4-15)",
+          "Ranking of 1, 2, or 3 on the Motivation to Learn subscale of the SSiS-PSG",
+          "Two or more office discipline referrals (ODRs) within a grading period"
+        ],
+        "academic": [
+          "Two of more missing assignments within a grading period",
+          "AIMSweb: intensive or strategic level (math or reading)",
+          "Progress report: Targeted for Growth for academic learning behaviors"
+        ],
+        "logic": "One or more of Behavior AND/OR One or more of Academic"
+      },
+      "progress_monitoring": {
+        "student_behavior": "Student behavior targeted for improvement (e.g., academic engaged time % of intervals, assignment completion, ODRs).",
+        "treatment_integrity": [
+          "Implementation checklist",
+          "Treatment integrity checklist"
+        ],
+        "social_validity": [
+          "IRP-15 (teacher)",
+          "Student-completed survey"
+        ]
+      },
+      "exit_criteria": {
+        "discipline": "0-1 ODRs in a grading period",
+        "assignments": "Zero missing assignments in a grading period",
+        "behavior": [
+          "SRSS-E7: Low (0-3)",
+          "SRSS-I5: Low (0-1)"
+        ],
+        "motivation": "Ranking of 4 or 5 on the Motivation to Learn subscale of the SSiS-PSG",
+        "logic": "Discipline AND Assignments AND (Behavior OR Motivation)"
+      }
+    },
+    {
+      "support_name": "Opportunities to Respond (OTR)",
+      "description": "Increasing students' opportunities to respond (OTR) is a strategy that helps students review material, acquire skill fluency, and commit information to memory while simultaneously increasing on-task behavior and reducing misbehavior. OTR strategy is designed to offer students frequent opportunities (i.e., 3 or more OTR per min) using either single-student (e.g., hand raising) or unison responding (e.g., choral responding), within a set time period (e.g., 10 min.) to respond to teacher questions or prompts about targeted academic material. This is best done with materials or concepts in which students have a basic understanding.",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7: Moderate (4-8)",
+          "SRSS-I5: Moderate (2-3)",
+          "SRSS-E7: High (9-21)",
+          "SRSS-I5: High (4-15)",
+          "SSiS-PSG Ranking of 1, 2, or 3 on the Motivation to Learn",
+          "Office discipline referrals (ODRs) 2 or more within a grading period"
+        ],
+        "academic": [
+          "Two of more missing assignments within a grading period",
+          "AIMSweb: intensive or strategic level (math or reading)",
+          "Progress report: Targeted for Growth for academic learning behaviors"
+        ],
+        "logic": "One or more of Behavior AND/OR One or more of Academic"
+      },
+      "progress_monitoring": {
+        "student_behavior": "Student behavior targeted for improvement (e.g., academic engaged time, on-task, disruption; % of intervals) or weekly progress monitoring (e.g., weekly quiz score)",
+        "treatment_integrity": [
+          "Implementation checklist",
+          "Treatment integrity checklist"
+        ],
+        "social_validity": [
+          "IRP-15 (teacher)",
+          "CIRP or OTR Social Validity Form (student)"
+        ]
+      },
+      "exit_criteria": {
+        "discipline": "ODRs 0-1 in a grading period",
+        "assignments": "No missing assignments in a grading period",
+        "behavior": [
+          "SRSS-E7: Low (0-3)",
+          "SRSS-I5: Low (0-1)"
+        ],
+        "motivation": "SSiS-PSG Ranking of 4 or 5 on the Motivation to Learn subscale",
+        "logic": "Discipline AND Assignments AND (Behavior OR Motivation)"
+      }
+    },
+    {
+      "support_name": "Precorrection",
+      "description": "Plan to modify teacher behavior and environmental contexts where problem behaviors are likely to occur by providing supports, prompts, and reinforcement for appropriate student behavior, preventing problem behaviors from occurring.",
+      "entry_criteria": {
+        "behavior": [
+          "SRSS-E7: Moderate (4-8)",
+          "SRSS-I5: Moderate (2-3)",
+          "SRSS-E7: High (9-21)",
+          "SRSS- I5: High (4-15)",
+          "2 or more office discipline referrals per day in a class"
+        ],
+        "academic": [
+          "Consistent, predictable pattern of academic errors",
+          "Missing Assignments 2 or more within a grading period",
+          "Progress report: Passing (K-3 Progressing or higher; 4-5 C or higher) in subject area targeted"
+        ],
+        "logic": "One or more of Behavior AND/OR One or more of Academic"
+      },
+      "progress_monitoring": {
+        "student_performance": [
+          "Direct measure of student behavior targeted for improvement"
+        ],
+        "treatment_integrity": [
+          "Implementation checklist",
+          "Treatment integrity checklist"
+        ],
+        "social_validity": [
+          "IRP-15 (teacher)",
+          "Student-completed survey"
+        ]
+      },
+      "exit_criteria": {
+        "behavior_criterion": "Meets targeted behavior criterion for 3 consecutive weeks",
+        "discipline": "Two consecutive weeks of zero discipline referrals during target time / activity",
+        "behavior_scores": [
+          "SRSS-E7: low risk (0-3)",
+          "SRSS- I5: low risk (0-1)"
+        ],
+        "logic": "Behavior criterion AND Discipline AND Behavior scores"
+      }
+    }
+  ]
+}
