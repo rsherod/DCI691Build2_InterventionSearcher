@@ -38,21 +38,17 @@ if "sample_tier2_loaded" not in st.session_state:
 if "sample_tier2_name" not in st.session_state:
     st.session_state.sample_tier2_name = ""
 
-# Center the header image on all screen sizes
-st.markdown(
-    """
+# Center the entire main content area on large screens and give it a comfy max width
+st.markdown("""
     <style>
-      /* Flex wrapper to force true centering even on ultra-wide monitors */
-      #header-img {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+      /* Centers the main block container within the viewport when layout='wide' */
+      .block-container {
+        max-width: 1200px;   /* tweak 1100–1300 if you like */
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
-      #header-img img { display: block; }
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
 # Display image
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
