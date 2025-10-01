@@ -93,8 +93,8 @@ with st.sidebar:
     st.file_uploader("Tier 2 or Tier 3 Intervention Grid (disabled)",
                      type=["pdf"], disabled=True, key="tier2_disabled_slot",
                      label_visibility="collapsed")
-    if st.session_state.sample_tier2_loaded and st.session_state.sample_tier2_name:
-        st.success(f"✅ Loaded: {st.session_state.sample_tier2_name}")
+    if st.session_state.sample_tier2_loaded:
+        st.success("✅ A Tier 2 Intervention Grid has already been uploaded.")
     else:
         st.info("No sample detected.")
 
