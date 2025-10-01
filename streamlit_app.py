@@ -84,17 +84,6 @@ except Exception as e:
 
 # Sidebar for model and temperature selection
 with st.sidebar:
-    st.markdown("<h1 style='text-align: center;'>Settings</h1>", unsafe_allow_html=True)
-    st.caption("Note: Different models have different request rate limits. Please refer to Google AI documentation for details.")
-    
-    model_option = st.selectbox(
-        "Select Model:", ["gemini-2.0-flash", "gemini-2.0-pro-exp-02-05"]
-    )
-    
-    if model_option != st.session_state.model_name:
-        st.session_state.model_name = model_option
-        st.session_state.messages = []
-        st.session_state.chat_session = None
 
     # File upload section - show Tier 2 and Tier 3 slots, but DISABLED
     st.markdown("<h1 style='text-align: center;'>Upload Intervention Grid</h1>", unsafe_allow_html=True)
