@@ -294,13 +294,9 @@ with st.sidebar:
         st.session_state.pdf_uploaded = False
         st.session_state.uploaded_file = None
         # Reset Student Information form so users must reselect options
-        # Explicitly set each widget's key back to the default option shown in your selectboxes.
-        st.session_state["Academic_read"] = "Click to select"
-        st.session_state["Academic_math"] = "Click to select"
-        st.session_state["SRSS_I"] = "Click to select"
-        st.session_state["SRSS_E"] = "Click to select"
-        st.session_state["Days_missed"] = "Click to select"
-        st.session_state["ODRs"] = "Click to select"
+        # For widgets in a form, delete their state and let defaults apply on rerun.
+        for k in ["Academic_read", "Academic_math", "SRSS_I", "SRSS_E", "Days_missed", "ODRs"]:
+            st.session_state.pop(k, None)
         st.session_state.form_responses = {}        # clear stored form responses mirror
         st.session_state.form_submitted = False
         st.session_state.should_generate_response = False
