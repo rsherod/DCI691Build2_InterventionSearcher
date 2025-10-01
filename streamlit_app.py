@@ -4,6 +4,8 @@ import google.generativeai as genai
 from PIL import Image
 import io
 from io import BytesIO
+import json
+import os
 
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
@@ -42,7 +44,7 @@ try:
     image = Image.open(image_path)
     col1, col2, col3 = st.columns([1,6,1])
     with col2:
-        st.image(image, use_container_width=True)
+        st.image(image, width='stretch')
         st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
         st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
 except Exception as e:
@@ -56,24 +58,29 @@ st.caption("Note: This Bot can make mistakes. Make sure you refer back to the in
 # Initialize Gemini client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
-# -------- Preload a SAMPLE Tier 2 PDF so it's "already uploaded" --------
-# Place your sample file at this path (or change it here)
-SAMPLE_TIER2_PATH = "sample_tier2.json"
+# -------- Always-use-JSON preload (no file upload to Gemini) --------
+SAMPLE_TIER2_JSON = "sample_tier2.json"
 try:
     if not st.session_state.sample_tier2_loaded:
-        with open(SAMPLE_TIER2_PATH, "rb") as _f:
-            # Upload once and reuse in session state
-            uploaded_file = genai.upload_file(_f, mime_type="application/pdf")
-            st.session_state.uploaded_file = uploaded_file
+        if os.path.exists(SAMPLE_TIER2_JSON):
+            with open(SAMPLE_TIER2_JSON, "r", encoding="utf-8") as jf:
+                data = json.load(jf)
+            # Join page texts (fallback to whole file if structure differs)
+            pages = data.get("pages")
+            if isinstance(pages, list):
+                st.session_state.pdf_content = "\n\n".join(p.get("text", "") for p in pages)
+            else:
+                st.session_state.pdf_content = json.dumps(data, ensure_ascii=False, indent=2)
+            st.session_state.uploaded_file = None
             st.session_state.pdf_uploaded = True
             st.session_state.sample_tier2_loaded = True
-            st.session_state.sample_tier2_name = SAMPLE_TIER2_PATH
-            st.session_state.debug.append("Sample Tier 2 PDF preloaded and stored in session state")
-except FileNotFoundError:
-    st.warning("Sample Tier 2 PDF not found. Add a file named 'sample_tier2.json' to preload it.")
+            st.session_state.sample_tier2_name = SAMPLE_TIER2_JSON
+            st.session_state.debug.append("Sample Tier 2 loaded from JSON")
+        else:
+            st.warning("Sample Tier 2 JSON not found. Add 'sample_tier2.json' to the repo root.")
 except Exception as e:
-    st.error(f"Error preloading sample Tier 2 PDF: {e}")
-    st.session_state.debug.append(f"Sample preload error: {e}")
+    st.error(f"Error loading sample Tier 2 JSON: {e}")
+    st.session_state.debug.append(f"Sample JSON load error: {e}")
 
 # Sidebar for model and temperature selection
 with st.sidebar:
@@ -94,7 +101,9 @@ with st.sidebar:
 
     # Match the screenshot: caption above, no bold label on the uploader
     st.caption("Upload Tier 2 or Tier 3 Intervention Grid:")
-    st.file_uploader("", type=["pdf"], disabled=True, key="tier2_disabled_slot")
+    st.file_uploader("Tier 2 or Tier 3 Intervention Grid (disabled)",
+                     type=["pdf"], disabled=True, key="tier2_disabled_slot",
+                     label_visibility="collapsed")
     if st.session_state.sample_tier2_loaded and st.session_state.sample_tier2_name:
         st.success(f"✅ Loaded: {st.session_state.sample_tier2_name}")
     else:
@@ -233,8 +242,9 @@ Form Responses:
             try:
                 # Combine PDF and prompt into a single message to reduce API calls
                 parts = []
-                if st.session_state.uploaded_file:
-                    parts.append(st.session_state.uploaded_file)
+                # Always include JSON text of the grid (no PDF)
+                if st.session_state.get("pdf_content"):
+                    parts.append("Intervention Grid (text extract):\n" + st.session_state.pdf_content)
                 parts.append(current_message["content"])
                 
                 # Send everything in one API call
@@ -289,8 +299,12 @@ if user_input:
                 st.stop()
 
         try:
-            # Send the user input directly
-            response = st.session_state.chat_session.send_message(user_input)
+            # Include JSON grid text with ad-hoc user messages as well
+            parts = []
+            if st.session_state.get("pdf_content"):
+                parts.append("Intervention Grid (text extract):\n" + st.session_state.pdf_content)
+            parts.append(user_input)
+            response = st.session_state.chat_session.send_message(parts)
             full_response = response.text
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
