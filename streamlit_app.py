@@ -54,12 +54,12 @@ st.markdown("""
 image_path = 'Tier 2 and Tier 3 Intervention Grid Search.jpg'
 try:
     image = Image.open(image_path)
-    # Wrap the image in a flex container that stays centered at any width
-    st.markdown('<div id="header-img">', unsafe_allow_html=True)
-    st.image(image, width=800)
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
+    # Use a 3-column layout and place the image in the center column
+    _left, center, _right = st.columns([1, 2, 1])
+    with center:
+        st.image(image, width=800)
+        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>Created by Rebecca Sherod (2024)</small></div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center;'><small style='color: rgb(128, 128, 128);'>This work was supported, in part, by ASU's Mary Lou Fulton Teachers College (MLFTC). The opinions and findings expressed in this document are those of the author and do not necessarily reflect those of the funding agency.</small></div>", unsafe_allow_html=True)
 except Exception as e:
     st.error(f"Error loading image: {e}")
 
