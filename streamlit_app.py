@@ -12,6 +12,40 @@ import datetime
 # Streamlit configuration
 st.set_page_config(page_title="Streamlit Chatbot", layout="wide")
 
+# -----------------------------
+# Simple password protection
+# -----------------------------
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+def _require_password():
+    """
+    Blocks the app until the correct password is entered.
+    Set the password via Streamlit secrets: st.secrets['APP_PASSWORD']
+    or environment variable APP_PASSWORD.
+    """
+    expected = st.secrets.get("APP_PASSWORD") or os.environ.get("APP_PASSWORD")
+    if not expected:
+        st.error("App password not configured. Set `APP_PASSWORD` in Streamlit secrets or environment.")
+        st.stop()
+
+    if st.session_state.authenticated:
+        return True
+
+    with st.sidebar:
+        st.markdown("### 🔒 Enter password")
+        pw = st.text_input("Password", type="password", key="__app_pw__")
+        if st.button("Unlock"):
+            if pw == expected:
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("Incorrect password.")
+    if not st.session_state.authenticated:
+        st.stop()
+
+_require_password()
+
 # Initialize all session state variables
 if "form_submitted" not in st.session_state:
     st.session_state.form_submitted = False
