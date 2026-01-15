@@ -56,7 +56,7 @@ if "should_generate_response" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model_name" not in st.session_state:
-    st.session_state.model_name = "gemini-2.0-flash"
+    st.session_state.model_name = "gemini-3-flash-preview"
 if "temperature" not in st.session_state:
     st.session_state.temperature = 0.5
 if "debug" not in st.session_state:
